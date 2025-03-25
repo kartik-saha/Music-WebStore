@@ -1,0 +1,12 @@
+@import url("../variables.css");
+
+footer {
+    padding: 15px 0px 15px 0px;
+    background: var(--secondary-bg);
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    color: var(--primary-color);
+}
