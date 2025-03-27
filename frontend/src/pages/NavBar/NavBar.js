@@ -1,21 +1,28 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "./NavBar.css"; // Import styles
-import { PROJECT_NAME } from "../../config";  // Correct relative path
+import React, { useState } from "react";
+import "./NavBar.css";
+import { PROJECT_NAME } from "../../config";
+import LoginModal from "../../pages/LoginModal/LoginModal"; // Import the modal
 
 const NavBar = () => {
+    const [isLoginOpen, setIsLoginOpen] = useState(false); // State to control modal
+
     return (
-        <header className="navbar">
-            <div className="logo">🎵 {PROJECT_NAME}</div>
-            <nav>
-                <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/genres">Genres</Link></li>
-                    <li><Link to="/charts">Top Charts</Link></li>
-                    <li><Link to="/login">Profile</Link></li>
-                </ul>
-            </nav>
-        </header>
+        <>
+            <header className="navbar">
+                <div className="logo">🎵 {PROJECT_NAME}</div>
+                <nav>
+                    <ul>
+                        <li><button onClick={() => window.location.href = "/"}>Home</button></li>
+                        <li><button onClick={() => window.location.href = "/genres"}>Genres</button></li>
+                        <li><button onClick={() => window.location.href = "/charts"}>Top Charts</button></li>
+                        <li><button onClick={() => setIsLoginOpen(true)}>Login</button></li>
+                    </ul>
+                </nav>
+            </header>
+
+            {/* Login Modal Component */}
+            <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+        </>
     );
 };
 

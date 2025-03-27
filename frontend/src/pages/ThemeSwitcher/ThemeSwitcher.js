@@ -4,19 +4,22 @@ import "./ThemeSwitcher.css";
 const ThemeSwitcher = () => {
     const [darkMode, setDarkMode] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [accentColor, setAccentColor] = useState("#007bff"); // Default accent color
+    const [accent, setAccent] = useState("accent1"); // Default accent color (blue)
 
     // Apply theme mode and accent color
     useEffect(() => {
         document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
+        document.documentElement.setAttribute("data-accent", accent);
         localStorage.setItem("theme", darkMode ? "dark" : "light");
-        document.documentElement.style.setProperty("--accent-color", accentColor);
-    }, [darkMode, accentColor]);
+        localStorage.setItem("accent", accent);
+    }, [darkMode, accent]);
 
-    // Load saved theme on initial render
+    // Load saved theme and accent on initial render
     useEffect(() => {
         const savedTheme = localStorage.getItem("theme") || "light";
+        const savedAccent = localStorage.getItem("accent") || "accent1";
         setDarkMode(savedTheme === "dark");
+        setAccent(savedAccent);
     }, []);
 
     return (
@@ -44,12 +47,11 @@ const ThemeSwitcher = () => {
 
                 {/* Theme Color Options */}
                 <div className="theme-options">
-                    <button className="theme-btn theme-blue" onClick={() => setAccentColor("#007bff")}>Blue</button>
-                    <button className="theme-btn theme-green" onClick={() => setAccentColor("#28a745")}>Green</button>
-                    <button className="theme-btn theme-red" onClick={() => setAccentColor("#dc3545")}>Red</button>
-                    <button className="theme-btn theme-purple" onClick={() => setAccentColor("#6f42c1")}>Purple</button>
-                    <button className="theme-btn theme-orange" onClick={() => setAccentColor("#fd7e14")}>Orange</button>
-                    <button className="theme-btn theme-pink" onClick={() => setAccentColor("#e83e8c")}>Pink</button>
+                    <button className="theme-btn" style={{ backgroundColor: "#1e90ff" }} onClick={() => setAccent("accent1")}>Ocean</button>
+                    <button className="theme-btn" style={{ backgroundColor: "#28a745" }} onClick={() => setAccent("accent3")}>Sage</button>
+                    <button className="theme-btn" style={{ backgroundColor: "#dc3545" }} onClick={() => setAccent("accent2")}>Cherry</button>
+                    <button className="theme-btn" style={{ backgroundColor: "#6f42c1" }} onClick={() => setAccent("accent5")}>Plum</button>
+                    <button className="theme-btn" style={{ backgroundColor: "#fd7e14" }} onClick={() => setAccent("accent4")}>Amber</button>
                 </div>
             </div>
         </div>
