@@ -1,8 +1,23 @@
 :root {
-    --primary-bg: #1a1a1a;
-    --secondary-bg: #121212;
-    --primary-color: white;
-    --accent-color: #1db954;
-    --accent-hover: #17a347;
-    --font-family: Arial, sans-serif;
+    /* Light Mode */
+    --primary-bg: #ffffff;
+    --secondary-bg: #c0c0c0;
+    --primary-color: #222;
+    --accent-color: #007bff;
+    --toggle-bg: #ddd;
+    --toggle-icon: #222;
+    --toggle-active-bg: #222;
+    --toggle-active-icon: #fff;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+    --primary-bg: #222;
+    --secondary-bg: #404040;
+    --primary-color: #fff;
+    --accent-color: #ff9800;
+    --toggle-bg: #444;
+    --toggle-icon: #fff;
+    --toggle-active-bg: #fff;
+    --toggle-active-icon: #222;
 }
