@@ -1,19 +1,22 @@
 @import url("../variables.css"); /* Import global styles */
 
+/* Navbar Styling */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 30px;
-    background-color: var(--accent-color);
-    color: var(--text-color);
+    background-color: var(--primary-accent);
+    color: var(--font-color);
 }
 
+/* Logo */
 .navbar .logo {
     font-size: 1.8rem;
     font-weight: bold;
 }
 
+/* Navigation Menu */
 .navbar ul {
     list-style: none;
     display: flex;
@@ -24,13 +27,53 @@
     display: inline;
 }
 
+/* Navigation Links */
 .navbar ul li a {
     text-decoration: none;
-    color: var(--text-color);
+    color: var(--font-color);
     font-size: 1.2rem;
     transition: color 0.3s;
 }
 
+/* Hover Effect */
 .navbar ul li a:hover {
-    color: var(--accent-color);
+    color: var(--secondary-accent);
+}
+
+/* Light Theme */
+[data-theme="light"] .navbar {
+    background-color: var(--primary-accent);
+    color: var(--font-color-dark);
+}
+
+/* Dark Theme */
+[data-theme="dark"] .navbar {
+    background-color: var(--primary-accent);
+    color: var(--font-color-light);
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    padding: 0;
+}
+
+.navbar ul li {
+    display: inline;
+}
+
+.navbar ul li button {
+    background: none;
+    border: 2px solid transparent;
+    color: var(--text-color);
+    font-size: 1rem;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+}
+
+.navbar ul li button:hover {
+    color: var(--secondary-accent);
 }

@@ -1,16 +1,69 @@
+/* Root Variables */
 :root {
-    --accent-color: #1e90ff; /* Default theme color */
-    --slider-bg-light: var(--accent-color);
-    --slider-bg-dark: var(--accent-color);
+    --primary-bg-light: white;
+    --secondary-bg-light: #f5f5f5;
+    --primary-bg-dark: #121212;
+    --secondary-bg-dark: #1e1e1e;
+
+    --font-color-light: black;
+    --font-color-dark: white;
+
+    /* Default Accent Theme */
+    --primary-accent: var(--accent1-primary);
+    --secondary-accent: var(--accent1-secondary);
+
+    --slider-bg-light: var(--primary-accent);
+    --slider-bg-dark: var(--primary-accent);
     --slider-circle-light: white;
     --slider-circle-dark: white;
+
     --animation-duration: 0.2s; /* Control all animations from here */
+}
+
+/* Light Theme */
+[data-theme="light"] {
+    --primary-bg: var(--primary-bg-light);
+    --secondary-bg: var(--secondary-bg-light);
+    --font-color: var(--font-color-light);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+    --primary-bg: var(--primary-bg-dark);
+    --secondary-bg: var(--secondary-bg-dark);
+    --font-color: var(--font-color-dark);
+}
+
+/* Accent Theme Colors */
+[data-accent="accent1"] {
+    --primary-accent: var(--accent1-primary);
+    --secondary-accent: var(--accent1-secondary);
+}
+
+[data-accent="accent2"] {
+    --primary-accent: var(--accent2-primary);
+    --secondary-accent: var(--accent2-secondary);
+}
+
+[data-accent="accent3"] {
+    --primary-accent: var(--accent3-primary);
+    --secondary-accent: var(--accent3-secondary);
+}
+
+[data-accent="accent4"] {
+    --primary-accent: var(--accent4-primary);
+    --secondary-accent: var(--accent4-secondary);
+}
+
+[data-accent="accent5"] {
+    --primary-accent: var(--accent5-primary);
+    --secondary-accent: var(--accent5-secondary);
 }
 
 /* Theme Container */
 .theme-container {
     position: fixed;
-    top: calc(50% - 200px); /* Adjust the offset from center */
+    top: calc(50% - 200px);
     right: 0;
     transform: translateY(-50%);
     z-index: 1000;
@@ -45,7 +98,7 @@
 .theme-container.open .toggle-btn {
     width: 180px;
     height: 300px;
-    border-radius: 20px 0 0 20px; /* Left corners rounded, right sharp */
+    border-radius: 20px 0 0 20px;
     align-items: flex-start;
     padding: 15px;
 }
@@ -173,12 +226,11 @@ input:checked + .slider::before {
 }
 
 /* Dynamic Accent Colors */
-.theme-blue { background: #1e90ff; }
-.theme-green { background: #28a745; }
-.theme-red { background: #dc3545; }
-.theme-purple { background: #6f42c1; }
-.theme-orange { background: #fd7e14; }
-.theme-pink { background: #e83e8c; }
+.theme-btn.theme-blue { background: var(--accent1-primary); }
+.theme-btn.theme-green { background: var(--accent3-primary); }
+.theme-btn.theme-red { background: var(--accent2-primary); }
+.theme-btn.theme-purple { background: var(--accent5-primary); }
+.theme-btn.theme-orange { background: var(--accent4-primary); }
 
 .theme-btn:hover {
     opacity: 0.8;
