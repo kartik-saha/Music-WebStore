@@ -1,12 +1,24 @@
-@import url("../variables.css");
+@import url("../variables.css"); /* Import global styles */
 
 footer {
-    padding: 15px 0px 15px 0px;
-    background: var(--secondary-bg);
+    padding: 15px 0;
+    background: var(--primary-accent);
     position: relative;
     bottom: 0;
     width: 100%;
     max-width: 100%;
     text-align: center;
-    color: var(--primary-color);
+    color: var(--font-color);
+}
+
+/* Light Theme */
+[data-theme="light"] footer {
+    background: var(--primary-accent);
+    color: var(--font-color-light);
+}
+
+/* Dark Theme */
+[data-theme="dark"] footer {
+    background: var(--primary-accent);
+    color: var(--font-color-dark);
 }
