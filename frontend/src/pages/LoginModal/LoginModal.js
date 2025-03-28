@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa"; // Import icons
+import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa"; 
 import "./LoginModal.css";
 
-const SITE_KEY = "6LcfXQIrAAAAAA68SEFqOqX6naSN8RgBm36qf5Du"; // Replace with your actual reCAPTCHA site key
+const SITE_KEY = "6LcfXQIrAAAAAA68SEFqOqX6naSN8RgBm36qf5Du";
 
 const LoginModal = ({ isOpen, onClose }) => {
     const [isRegistering, setIsRegistering] = useState(false);
@@ -59,7 +59,7 @@ const LoginModal = ({ isOpen, onClose }) => {
                     <div className="social-login">
                         <span>{isRegistering ? "Or Register With" : "Or Login With"}</span>
                         <div className="social-icons">
-                            <FaGoogle className="social-icon" on5Click={() => handleOAuthLogin("Google")} />
+                            <FaGoogle className="social-icon" onClick={() => handleOAuthLogin("Google")} />
                             <FaTwitter className="social-icon" onClick={() => handleOAuthLogin("Twitter")} />
                             <FaFacebook className="social-icon" onClick={() => handleOAuthLogin("Facebook")} />
                         </div>
