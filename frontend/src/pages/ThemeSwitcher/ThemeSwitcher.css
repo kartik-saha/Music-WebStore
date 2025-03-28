@@ -1,0 +1,185 @@
+:root {
+    --accent-color: #1e90ff; /* Default theme color */
+    --slider-bg-light: var(--accent-color);
+    --slider-bg-dark: var(--accent-color);
+    --slider-circle-light: white;
+    --slider-circle-dark: white;
+    --animation-duration: 0.2s; /* Control all animations from here */
+}
+
+/* Theme Container */
+.theme-container {
+    position: fixed;
+    top: calc(50% - 200px); /* Adjust the offset from center */
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 1000;
+    width: 50px;
+    height: 80px;
+    transition: all var(--animation-duration) ease-in-out;
+}
+
+/* Morphing Semi-Circle Button */
+.toggle-btn {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background-color: var(--secondary-bg);
+    width: 50px;
+    height: 80px;
+    border-radius: 40px 0 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--animation-duration) ease-in-out;
+}
+
+/* Transform into Squircle */
+.theme-container.open {
+    width: 180px;
+    height: 300px;
+}
+
+.theme-container.open .toggle-btn {
+    width: 180px;
+    height: 300px;
+    border-radius: 20px 0 0 20px; /* Left corners rounded, right sharp */
+    align-items: flex-start;
+    padding: 15px;
+}
+
+/* Hide Sun Icon when menu opens */
+.theme-container.open .toggle-btn .icon {
+    opacity: 0;
+}
+
+/* Theme Menu Content */
+.theme-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--animation-duration) ease-in-out, 
+                visibility 0s linear var(--animation-duration);
+}
+
+/* Show content when menu opens */
+.theme-container.open .theme-content {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity var(--animation-duration) ease-in-out, 
+                visibility 0s linear;
+}
+
+/* Light/Dark Mode Toggle */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 180px;
+    height: 36px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+/* Hide default checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Slider Background */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--slider-bg-light);
+    border-radius: 9px;
+    transition: background-color var(--animation-duration);
+}
+
+/* Slider Circle */
+.slider::before {
+    content: "☀️";
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--slider-circle-light);
+    border-radius: 7px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--animation-duration), 
+                background-color var(--animation-duration);
+}
+
+/* When Dark Mode is ON */
+input:checked + .slider {
+    background-color: var(--slider-bg-dark);
+}
+
+input:checked + .slider::before {
+    content: "🌙";
+    transform: translateX(144px);
+    background-color: var(--slider-circle-dark);
+}
+
+/* Theme Options */
+.theme-options {
+    margin-right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--animation-duration) ease-in-out, 
+                visibility 0s linear var(--animation-duration);
+}
+
+/* Fade in buttons when menu is open */
+.theme-container.open .theme-options {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity var(--animation-duration) ease-in-out, 
+                visibility 0s linear;
+}
+
+/* Theme Buttons */
+.theme-btn {
+    width: auto;
+    min-width: 180px;
+    padding: 8px 12px;
+    border: none;
+    color: white;
+    font-size: 14px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: background var(--animation-duration) ease-in-out;
+    text-align: center;
+}
+
+/* Dynamic Accent Colors */
+.theme-blue { background: #1e90ff; }
+.theme-green { background: #28a745; }
+.theme-red { background: #dc3545; }
+.theme-purple { background: #6f42c1; }
+.theme-orange { background: #fd7e14; }
+.theme-pink { background: #e83e8c; }
+
+.theme-btn:hover {
+    opacity: 0.8;
+}

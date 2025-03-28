@@ -1,17 +1,30 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import NavBar from "./pages/NavBar/NavBar"; // Import NavBar component
-import LandingPage from "./pages/LandingPage/LandingPage"; // Import LandingPage component
+import NavBar from "./pages/NavBar/NavBar";
+import Footer from "./pages/Footer/Footer";
+import ThemeSwitcher from "./pages/ThemeSwitcher/ThemeSwitcher";
+
+// Lazy load LandingPage for performance optimization
+const LandingPage = lazy(() => import("./pages/LandingPage/LandingPage"));
 
 function App() {
     return (
-        <Router>
-            <NavBar /> {/* Display NavBar on all pages */}
-            <Routes>
-                <Route path="/" element={<LandingPage />} />
-                {/* Add more routes here as you expand your app */}
-            </Routes>
-        </Router>
+        <>
+            <ThemeSwitcher /> {/* Theme toggle always accessible */}
+
+            <Router>
+                <NavBar /> {/* Navbar always visible */}
+
+                <Suspense fallback={<div className="loader">Loading...</div>}>
+                    <Routes>
+                        <Route path="/" element={<LandingPage />} />
+                        {/* Add more routes as needed */}
+                    </Routes>
+                </Suspense>
+
+                <Footer /> {/* Footer at the bottom */}
+            </Router>
+        </>
     );
 }
 

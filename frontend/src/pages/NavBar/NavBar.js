@@ -1,11 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./NavBar.css"; // Import styles
+import { PROJECT_NAME } from "../../config";  // Correct relative path
 
 const NavBar = () => {
     return (
         <header className="navbar">
-            <div className="logo">🎵 MusicWave</div>
+            <div className="logo">🎵 {PROJECT_NAME}</div>
             <nav>
                 <ul>
                     <li><Link to="/">Home</Link></li>

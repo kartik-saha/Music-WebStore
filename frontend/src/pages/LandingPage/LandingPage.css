@@ -20,7 +20,7 @@ body {
 }
 
 .hero-content {
-    background: rgba(0, 0, 0, 0.7);
+    background: var(--secondary-bg);
     padding: 40px;
     border-radius: 10px;
 }
