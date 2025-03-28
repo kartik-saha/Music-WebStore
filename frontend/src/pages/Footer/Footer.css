@@ -2,7 +2,7 @@
 
 footer {
     padding: 15px 0;
-    background: var(--secondary-bg);
+    background: var(--primary-accent);
     position: relative;
     bottom: 0;
     width: 100%;
@@ -13,12 +13,12 @@ footer {
 
 /* Light Theme */
 [data-theme="light"] footer {
-    background: var(--secondary-bg);
+    background: var(--primary-accent);
     color: var(--font-color-light);
 }
 
 /* Dark Theme */
 [data-theme="dark"] footer {
-    background: var(--secondary-bg);
+    background: var(--primary-accent);
     color: var(--font-color-dark);
 }

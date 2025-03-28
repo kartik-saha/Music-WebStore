@@ -5,8 +5,9 @@ import Footer from "./pages/Footer/Footer";
 import ThemeSwitcher from "./pages/ThemeSwitcher/ThemeSwitcher";
 import { PROJECT_NAME } from "./config"; // Import project name
 
-// Lazy load LandingPage for performance optimization
+// Lazy load pages for performance optimization
 const LandingPage = lazy(() => import("./pages/LandingPage/LandingPage"));
+const Settings = lazy(() => import("./pages/Settings/Settings")); // ✅ New Settings Page
 
 const PageTitleUpdater = () => {
     const location = useLocation();
@@ -16,8 +17,8 @@ const PageTitleUpdater = () => {
         const titles = {
             "/": `Home | ${PROJECT_NAME}`,
             "/about": `About | ${PROJECT_NAME}`,
-            "/contact": `Contact | ${PROJECT_NAME}`
-            // Add more routes as needed
+            "/contact": `Contact | ${PROJECT_NAME}`,
+            "/settings": `Settings | ${PROJECT_NAME}` // ✅ Added settings title
         };
 
         document.title = titles[location.pathname] || PROJECT_NAME;
@@ -29,20 +30,21 @@ const PageTitleUpdater = () => {
 function App() {
     return (
         <>
-            <ThemeSwitcher /> {/* Theme toggle always accessible */}
+            <ThemeSwitcher /> {/* ✅ Theme toggle always accessible */}
 
             <Router>
-                <PageTitleUpdater /> {/* Dynamically update tab title */}
-                <NavBar /> {/* Navbar always visible */}
+                <PageTitleUpdater /> {/* ✅ Dynamically update tab title */}
+                <NavBar /> {/* ✅ Navbar always visible */}
 
                 <Suspense fallback={<div className="loader">Loading...</div>}>
                     <Routes>
                         <Route path="/" element={<LandingPage />} />
-                        {/* Add more routes here */}
+                        <Route path="/settings" element={<Settings />} /> {/* ✅ New Settings Route */}
+                        {/* Add more routes here as needed */}
                     </Routes>
                 </Suspense>
 
-                <Footer /> {/* Footer at the bottom */}
+                <Footer /> {/* ✅ Footer at the bottom */}
             </Router>
         </>
     );
