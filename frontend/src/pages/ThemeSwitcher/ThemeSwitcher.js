@@ -48,7 +48,7 @@ const ThemeSwitcher = () => {
                 {/* Theme Color Options */}
                 <div className="theme-options">
                     <button className="theme-btn" style={{ backgroundColor: "#1e90ff" }} onClick={() => setAccent("accent1")}>Ocean</button>
-                    <button className="theme-btn" style={{ backgroundColor: "#28a745" }} k={() => setAccent("accent3")}>Sage</button>
+                   <button className="theme-btn" style={{ backgroundColor: "#28a745" }} onClick={() => setAccent("accent3")}>Sage</button>
                     <button className="theme-btn" style={{ backgroundColor: "#dc3545" }} onClick={() => setAccent("accent2")}>Cherry</button>
                     <button className="theme-btn" style={{ backgroundColor: "#6f42c1" }} onClick={() => setAccent("accent5")}>Plum</button>
                     <button className="theme-btn" style={{ backgroundColor: "#fd7e14" }} onClick={() => setAccent("accent4")}>Amber</button>

@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa"; 
+import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa";
 import "./LoginModal.css";
 
-const SITE_KEY = "6LcfXQIrAAAAAA68SEFqOqX6naSN8RgBm36qf5Du";
+const SITE_KEY = "6LcfXQIrAAAAAA68SEFqOqX6naSN8RgBm36qf5Du"; 
 
 const LoginModal = ({ isOpen, onClose }) => {
     const [isRegistering, setIsRegistering] = useState(false);
     const [captchaValue, setCaptchaValue] = useState(null);
+    const [formData, setFormData] = useState({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+    });
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -15,7 +21,6 @@ const LoginModal = ({ isOpen, onClose }) => {
                 onClose();
             }
         };
-
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, [onClose]);
@@ -28,40 +33,41 @@ const LoginModal = ({ isOpen, onClose }) => {
         }
     };
 
+    const handleInputChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-
         if (!captchaValue) {
             alert("Please complete the CAPTCHA.");
             return;
         }
-
-        console.log("Form submitted with CAPTCHA:", captchaValue);
+        console.log("Form submitted with:", formData, "CAPTCHA:", captchaValue);
     };
 
-    // Placeholder functions for OAuth login
-    const handleOAuthLogin = (provider) => {
+    const handleOAuthLogin = (provider, e) => {
+        e.preventDefault();
         console.log(`${isRegistering ? "Registering" : "Logging in"} with ${provider}`);
-        // Add real OAuth login logic here
     };
 
     return (
         <div className="modal-overlay" onClick={handleOverlayClick}>
-            <div className="modal-content">
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <h2>{isRegistering ? "Register" : "Login"}</h2>
                 <form onSubmit={handleSubmit}>
-                    <input type="text" placeholder="Username" required />
-                    <input type="email" placeholder="Email" required />
-                    <input type="password" placeholder="Password" required />
-                    {isRegistering && <input type="password" placeholder="Confirm Password" required />}
+                    <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleInputChange} required />
+                    <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleInputChange} required />
+                    <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} required />
+                    {isRegistering && <input type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleInputChange} required />}
 
                     {/* Social Login Section */}
                     <div className="social-login">
                         <span>{isRegistering ? "Or Register With" : "Or Login With"}</span>
                         <div className="social-icons">
-                            <FaGoogle className="social-icon" onClick={() => handleOAuthLogin("Google")} />
-                            <FaTwitter className="social-icon" onClick={() => handleOAuthLogin("Twitter")} />
-                            <FaFacebook className="social-icon" onClick={() => handleOAuthLogin("Facebook")} />
+                            <FaGoogle className="social-icon" onClick={(e) => handleOAuthLogin("Google", e)} />
+                            <FaTwitter className="social-icon" onClick={(e) => handleOAuthLogin("Twitter", e)} />
+                            <FaFacebook className="social-icon" onClick={(e) => handleOAuthLogin("Facebook", e)} />
                         </div>
                     </div>
 
@@ -73,7 +79,7 @@ const LoginModal = ({ isOpen, onClose }) => {
                     <button type="submit">{isRegistering ? "Register" : "Login"}</button>
                 </form>
 
-                <button onClick={() => setIsRegistering(!isRegistering)}>
+                <button type="button" onClick={() => setIsRegistering(!isRegistering)}>
                     {isRegistering ? "Already have an account? Login here" : "Don't have an account yet? Register here"}
                 </button>
             </div>
