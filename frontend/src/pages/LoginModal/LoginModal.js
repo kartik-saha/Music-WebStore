@@ -59,7 +59,7 @@ const LoginModal = ({ isOpen, onClose }) => {
                     <div className="social-login">
                         <span>{isRegistering ? "Or Register With" : "Or Login With"}</span>
                         <div className="social-icons">
-                            <FaGoogle className="social-icon" on5Click={() => handleOAuthLogin("Google")} />
+                            <FaGoogle className="social-icon" onClick={() => handleOAuthLogin("Google")} />
                             <FaTwitter className="social-icon" onClick={() => handleOAuthLogin("Twitter")} />
                             <FaFacebook className="social-icon" onClick={() => handleOAuthLogin("Facebook")} />
                         </div>

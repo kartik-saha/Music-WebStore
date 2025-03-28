@@ -1,11 +1,11 @@
+@import url("../variables.css"); /* Import global styles */
+
 /* General Container */
 .settings-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* min-height: 200vh;
-    padding: 20px; */
-    background-color: var(--primary-bg);
+    padding: 20px; /* Optional: Add some padding to avoid touching edges */
 }
 
 /* Settings Box */
@@ -14,18 +14,18 @@
     max-width: 900px;
     display: flex;
     flex-direction: column;
-    /* gap: 15px; */
     padding: 20px;
+    border-radius: 8px; /* Optional: rounded corners */
 }
 
 /* Setting Item Layout */
 .setting-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start; /* Align text to the left */
     gap: 10px;
-    padding: 40px;
-    border-bottom: 1px solid var(--primary-accent);
+    padding: 20px; /* Adjusted padding */
+    height: 40px;
 }
 
 /* Label Styling */
@@ -34,16 +34,59 @@
     font-size: 16px;
     color: var(--font-color);
     flex: 1;
+    text-align: left; /* Ensure the label text is aligned left */
 }
 
-/* Dropdown (Same width for Language & Quality) */
-.select-box {
+/* Custom Dropdown (Same width for Language & Quality) */
+.select-wrapper {
+    position: relative;
+    display: inline-block;
     width: 150px;
+}
+
+.select-box {
+    width: 136px;
     padding: 8px;
     font-size: 14px;
     border-radius: 4px;
-    border: 0px;
+    border: none;
     background-color: var(--secondary-bg);
+    color: var(--font-color);
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    text-align: left; /* Ensure the dropdown options are aligned left */
+}
+
+/* Custom dropdown arrow */
+.select-wrapper::after {
+    content: "▼"; /* Unicode arrow */
+    font-size: 12px;
+    color: var(--font-color);
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.select-box:hover,
+.select-box:focus {
+    background-color: var(--primary-accent);
+}
+
+.select-wrapper:hover::after {
+    color: var(--font-color-compliment);
+}
+
+/* Remove default browser styles */
+.select-box::-ms-expand {
+    display: none;
+}
+
+/* Ensure dropdown options follow theme */
+.select-box option {
+    background-color: var(--primary-bg);
     color: var(--font-color);
 }
 
@@ -68,23 +111,24 @@
 .custom-slider-track {
     width: 50px;
     height: 25px;
-    background-color: var(--primary-accent);
-    border-radius: 25px;
+    background-color: var(--secondary-bg);
+    border-radius: 5px;
     transition: background-color 0.3s ease;
     position: relative;
 }
 
+/* Ensure the slider circle stays white */
 .custom-slider-track::before {
     content: "";
     position: absolute;
     width: 20px;
-    height: 20px;
-    background-color: var(--primary-bg);
-    border-radius: 50%;
-    top: 50%;
+    height: 19px;
+    background-color: white;
+    border-radius: 20%;
+    top: 12px;
     left: 4px;
     transform: translateY(-50%);
-    transition: left 0.3s ease, background-color 0.3s ease;
+    transition: left 0.3s ease;
 }
 
 .custom-slider:checked + .custom-slider-track {
@@ -93,14 +137,14 @@
 
 .custom-slider:checked + .custom-slider-track::before {
     left: 26px;
-    background-color: var(--font-color);
+    background-color: white;
 }
 
 /* Input + Small Button Group (Email/Password) */
 .input-button-group {
     display: flex;
     align-items: center;
-    width: 250px;
+    width: 58%;
 }
 
 .small-input {
@@ -108,10 +152,11 @@
     padding: 8px;
     font-size: 14px;
     border-radius: 4px 0 0 4px;
-    border: 0px solid var(--secondary-accent);
+    border: none;
     background-color: var(--secondary-bg);
     color: var(--font-color);
     width: 100%;
+    text-align: left; /* Align text inside the input to the left */
 }
 
 .small-button {
@@ -140,7 +185,7 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-    width: 120px;
+    width: 136px;
     text-align: center;
 }
 
@@ -148,79 +193,39 @@
     background-color: var(--secondary-accent);
 }
 
-/* Custom Toggle Switch */
-.custom-slider-label {
-    position: relative;
-    width: 50px;
-    height: 25px;
+/* Number Input Field for Inactivity Timer */
+.number-input-group {
     display: flex;
     align-items: center;
-    cursor: pointer;
-    justify-content: flex-end;
+    gap: 10px;
+    margin: 10px 0;
 }
 
-.custom-slider {
-    width: 0;
-    height: 0;
-    opacity: 0;
-    position: absolute;
-}
-
-.custom-slider-track {
-    width: 50px;
-    height: 25px;
-    background-color: var(--primary-accent);
-    border-radius: 25px;
-    transition: background-color 0.3s ease;
-    position: relative;
-}
-
-.custom-slider-track::before {
-    content: "";
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: white !important; /* Keeps the circle white */
-    border-radius: 50%;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: left 0.3s ease;
-}
-
-.custom-slider:checked + .custom-slider-track {
-    background-color: var(--primary-accent);
-}
-
-.custom-slider:checked + .custom-slider-track::before {
-    left: 26px;
-    background-color: white !important; /* Ensures it stays white */
-}
-
-/* Dropdown (Same width for Language & Quality) */
-.select-box {
-    width: 150px;
+.number-input {
     padding: 8px;
     font-size: 14px;
     border-radius: 4px;
     border: 0px;
     background-color: var(--secondary-bg);
     color: var(--font-color);
-    appearance: none; /* Removes default browser styles */
-    outline: none; /* Prevents blue border */
+    width: 120px;
+    text-align: center;
+    outline: none;
 }
 
-/* Custom styling for the dropdown arrow */
-.select-box:hover,
-.select-box:focus {
-    background-color: var(--primary-accent); /* Changes background color on hover */
+.number-input:focus {
+    border-color: var(--primary-accent);
 }
 
-/* Remove default browser styles for select */
-.select-box::-ms-expand {
-    display: none; /* Removes the arrow in Internet Explorer */
+.theme-button {
+    width: 40px;
+    height: 40px;
+    border: 0px;
+    margin: 2px;
+    border-radius: 15%;
 }
 
-.select-box option {
-    background-color: var(--primary-bg);
-    color: var(--font-color);
+.theme-button:hover {
+    scale: 1.1;
+    transition: 0.2s;
 }
