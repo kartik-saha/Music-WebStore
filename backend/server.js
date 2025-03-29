@@ -1,14 +1,16 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config({ path: "./.env" });
-const connectDB = require("./config/db");
+
+const connectDB = require("./config/db");  // Ensure this file exists
 const authRoutes = require("./routes/auth");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-connectDB();
+connectDB(); // Ensure this function is properly implemented
+
 console.log("MongoDB URI:", process.env.MONGO_URI);
 
 app.use("/api/auth", authRoutes);
