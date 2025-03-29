@@ -235,3 +235,7 @@ input:checked + .slider::before {
 .theme-btn:hover {
     opacity: 0.8;
 }
+
+.icon{
+    color: var(--primary-accent);
+}

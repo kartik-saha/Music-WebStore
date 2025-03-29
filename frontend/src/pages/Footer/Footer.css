@@ -14,11 +14,11 @@ footer {
 /* Light Theme */
 [data-theme="light"] footer {
     background: var(--primary-accent);
-    color: var(--font-color-light);
+    color: white
 }
 
 /* Dark Theme */
 [data-theme="dark"] footer {
     background: var(--primary-accent);
-    color: var(--font-color-dark);
+    color: white;
 }

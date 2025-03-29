@@ -1,53 +1,67 @@
-import React, { Suspense, lazy, useEffect } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./pages/NavBar/NavBar";
 import Footer from "./pages/Footer/Footer";
 import ThemeSwitcher from "./pages/ThemeSwitcher/ThemeSwitcher";
-import { PROJECT_NAME } from "./config"; // Import project name
+import MediaPlayerModal from "./pages/MediaPlayerModal/MediaPlayerModal"; 
+import { PROJECT_NAME } from "./config";
 
-// Lazy load pages for performance optimization
-const LandingPage = lazy(() => import("./pages/LandingPage/LandingPage"));
-const Settings = lazy(() => import("./pages/Settings/Settings")); // ✅ New Settings Page
+// Direct imports for pages
+import LandingPage from "./pages/LandingPage/LandingPage";
+import Settings from "./pages/Settings/Settings";
+import UploadSong from "./pages/UploadSong/UploadSong";
 
 const PageTitleUpdater = () => {
     const location = useLocation();
 
     useEffect(() => {
-        // Set title based on route
         const titles = {
             "/": `Home | ${PROJECT_NAME}`,
             "/about": `About | ${PROJECT_NAME}`,
             "/contact": `Contact | ${PROJECT_NAME}`,
-            "/settings": `Settings | ${PROJECT_NAME}` // ✅ Added settings title
+            "/settings": `Settings | ${PROJECT_NAME}`,
+            "/upload-song": `Upload Song | ${PROJECT_NAME}`,
         };
 
         document.title = titles[location.pathname] || PROJECT_NAME;
     }, [location.pathname]);
 
-    return null; // This component does not render anything
+    return null;
 };
 
 function App() {
+    useEffect(() => {
+        // Apply theme and accent on load
+        const savedTheme = localStorage.getItem("theme") || "light";
+        const savedAccent = localStorage.getItem("accent") || "accent1";
+
+        document.documentElement.setAttribute("data-theme", savedTheme);
+        document.documentElement.setAttribute("data-accent", savedAccent);
+    }, []);
+
     return (
         <>
-            <ThemeSwitcher /> {/* ✅ Theme toggle always accessible */}
+            {/* Always Visible ThemeSwitcher */}
+            <ThemeSwitcher /> 
+            <NavBar />
+            
+            <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/upload-song" element={<UploadSong />} />
+            </Routes>
 
-            <Router>
-                <PageTitleUpdater /> {/* ✅ Dynamically update tab title */}
-                <NavBar /> {/* ✅ Navbar always visible */}
-
-                <Suspense fallback={<div className="loader">Loading...</div>}>
-                    <Routes>
-                        <Route path="/" element={<LandingPage />} />
-                        <Route path="/settings" element={<Settings />} /> {/* ✅ New Settings Route */}
-                        {/* Add more routes here as needed */}
-                    </Routes>
-                </Suspense>
-
-                <Footer /> {/* ✅ Footer at the bottom */}
-            </Router>
+            <Footer />
+            <MediaPlayerModal /> {/* Media player stays at the bottom */}
         </>
     );
 }
 
-export default App;
+export default function AppWithRouter() {
+    return (
+        <Router>
+            <PageTitleUpdater />
+            <App />
+        </Router>
+    );
+}

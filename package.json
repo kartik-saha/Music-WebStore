@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "music-webstore",
   "version": "1.0.0",
   "description": "Songeet is a feature-rich online music webstore designed to offer seamless music streaming, purchase, and artist engagement. The platform connects music enthusiasts with artists, providing an interactive and user-friendly experience for discovering, playing, and managing music.",
@@ -9,4 +10,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC"
+=======
+  "dependencies": {
+    "express": "^4.21.2",
+    "mongodb": "^6.15.0",
+    "mongoose": "^8.13.0"
+  }
+>>>>>>> 611ead8e5935e6de9c80ef122c01828d9f16cb68
 }
