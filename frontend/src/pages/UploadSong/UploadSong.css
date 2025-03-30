@@ -8,178 +8,151 @@
     padding: 40px;
     max-width: 90%;
     margin: 0 auto;
-    border-radius: 8px;
-  }
-  
-  h2 {
-    font-size: 24px;
-    color: var(--font-color);
-    padding-top: 0px;
-    padding-bottom: 40px;
-    padding-left: 80px;
-    padding-right: 80px;
-    margin-bottom: 39px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.upload-song-header{
-    border-bottom: 1px solid var(--primary-accent);
-  }
-  
-  /* Form layout */
-  .upload-form {
+h2 {
+    font-size: 28px;
+    color: var(--font-color);
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 3px solid var(--primary-accent);
+    padding-bottom: 10px;
+}
+
+/* Form layout */
+.upload-form {
     display: flex;
-    gap: 400px;
+    justify-content: space-between;
     width: 100%;
-  }
-  
-  /* Left Column (1/3 width for cover image and file upload) */
-  .left-column {
+    gap: 50px;
+}
+
+/* Left Column (Cover image and file upload) */
+.left-column {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 50px;
-    width: 20%; /* One-third width */
-  }
-  
-  /* Right Column (2/3 width for song details) */
-  .right-column {
+    gap: 30px;
+    width: 35%;
+}
+
+/* Right Column (Song details) */
+.right-column {
     display: flex;
-    gap: 40px;
     flex-direction: column;
-    align-items: right;
-    width: 80%; /* Two-thirds width */
-  }
-  
-  /* Cover image styling */
-  .cover-image-container {
+    gap: 20px;
+    width: 60%;
+}
+
+/* Cover image styling */
+.cover-image-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height:400px;
-    width: 400px;
-    /* border: 2px none var(--primary-accent); */
+    height: 350px;
+    width: 350px;
+    background-color: var(--secondary-bg);
+    border: 3px dashed var(--primary-accent);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.cover-image-container:hover {
     background-color: var(--primary-accent);
-    border-radius: 8px;
-    margin-bottom: 20px;
-    cursor: pointer; /* Make it clickable */
-  }
-  
-  .cover-image-placeholder {
-    font-size: 34px;
+}
+
+.cover-image-placeholder {
+    font-size: 20px;
     color: var(--font-color);
     text-align: center;
-  }
-  
-  .cover-image-preview {
+}
+
+.cover-image-preview {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 8px;
-  }
-  
-  /* Form groups */
-  .form-group {
+    border-radius: 10px;
+}
+
+/* Form groups */
+.form-group {
     display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.form-group label {
     font-weight: bold;
     color: var(--font-color);
-    width: 20%; /* Label width */
-    text-align: left;
-  }
-  
-  .form-group input {
-    padding: 10px;
-    border-radius: 4px;
+}
+
+.form-group input, .form-group select {
+    padding: 12px;
+    border-radius: 8px;
     background-color: var(--secondary-bg);
     color: var(--font-color);
     font-size: 16px;
-    border: none;
-    width: 800px; /* Input width */
-  }
-  
-  /* File input styles */
-  .file-input {
-    padding: 5px;
+    border: 1px solid var(--primary-accent);
     width: 100%;
-  }
-  
-  /* Button styles */
-  .upload-button {
-    padding: 12px;
-    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+}
+
+.form-group input:focus, .form-group select:focus {
+    border-color: var(--secondary-accent);
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 150, 255, 0.3);
+}
+
+/* Upload button */
+.upload-button, .upload-btn {
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
     color: white;
     background-color: var(--primary-accent);
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
-    width: 400px;
+    width: 100%;
     text-align: center;
-    transition: background-color 0.3s;
-  }
-  
-  .upload-button:hover {
+    transition: background-color 0.3s ease-in-out;
+}
+
+.upload-button:hover, .upload-btn:hover {
     background-color: var(--secondary-accent);
-  }
-  
-  .upload-button:disabled {
+    transform: scale(1.05);
+}
+
+.upload-button:disabled, .upload-btn:disabled {
     background-color: #ccc;
     cursor: not-allowed;
-  }
-  
-  /* Align the submit button to the center */
-  .upload-btn {
-    width: 400px;
-    display: block;
-    margin: 20px auto 0 auto;
-    padding: 12px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: var(--primary-accent);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 27px;
-  }
-  
-  .upload-btn:hover {
-    background-color: var(--secondary-accent);
-  }
-  
-  .upload-btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  /* Error message styling */
-  .error-message {
+}
+
+/* Error message styling */
+.error-message {
     color: red;
     font-size: 14px;
-    margin-bottom: 15px;
-  }
-  
-  /* Mobile responsiveness */
-  @media (max-width: 768px) {
+    margin-bottom: 10px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
     .upload-form {
-      flex-direction: column;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
     }
-  
-    .left-column,
-    .right-column {
-      width: 100%; /* Stack the columns */
+
+    .left-column, .right-column {
+        width: 100%;
     }
-  
-    .form-group label {
-      text-align: left;
-      margin-right: 0;
-      width: auto;
+
+    .cover-image-container {
+        width: 100%;
+        max-width: 300px;
     }
-  
-    .form-group input {
-      width: 100%;
-    }
-  }
-  
+}
