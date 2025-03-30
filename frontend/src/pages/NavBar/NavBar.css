@@ -12,51 +12,60 @@
 .navbar .logo {
     font-size: 1.8rem;
     font-weight: bold;
+    color: var(--primary-bg);
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: var(--secondary-bg);
+    border-radius: 20px;
+    padding: 5px 10px;
+    width: 40%;
+    min-width: 250px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--font-color);
+    width: 100%;
+    padding: 5px 10px;
+    font-size: 1rem;
+}
+
+.search-bar button {
+    background: none;
+    border: none;
+    color: var(--font-color);
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.search-bar button:hover {
+    color: var(--secondary-accent);
 }
 
 /* Navigation Menu */
 .navbar ul {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 15px;
 }
 
 .navbar ul li {
     display: inline;
 }
 
-/* Navigation Links */
-.navbar ul li a {
-    text-decoration: none;
-    color: var(--font-color);
-    font-size: 1.2rem;
-    transition: color 0.3s;
-}
-
-/* Hover Effect */
-.navbar ul li a:hover {
-    color: var(--secondary-accent);
-}
-
-/* Light Theme */
-[data-theme="light"] .navbar {
-    background-color: var(--primary-accent);
-    color: var(--font-color); /* Ensure the font color contrasts in light mode */
-}
-
-/* Dark Theme */
-[data-theme="dark"] .navbar {
-    background-color: var(--primary-accent);
-    color: var(--font-color-compliment); /* Use complement font color in dark mode */
-}
-
-/* Navigation Button Styling */
+/* Navigation Buttons */
 .navbar ul li button {
     background: none;
     border: 2px solid transparent;
-    color: var(--font-color);
+    color: var(--primary-bg);
     font-size: 1rem;
-    padding: 10px 15px;
+    padding: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
     border-radius: 5px;
@@ -64,18 +73,4 @@
 
 .navbar ul li button:hover {
     color: var(--secondary-accent);
-}
-
-/* Icon Button Styling */
-.icon-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: var(--font-color-compliment);
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.icon-btn:hover {
-    color: var(--primary-accent);
 }

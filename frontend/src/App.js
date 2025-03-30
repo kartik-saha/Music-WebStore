@@ -6,10 +6,11 @@ import ThemeSwitcher from "./pages/ThemeSwitcher/ThemeSwitcher";
 import MediaPlayerModal from "./pages/MediaPlayerModal/MediaPlayerModal"; 
 import { PROJECT_NAME } from "./config";
 
-// Direct imports for pages
+// Import pages
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Settings from "./pages/Settings/Settings";
 import UploadSong from "./pages/UploadSong/UploadSong";
+import Playlists from "./pages/Playlists/Playlists";  // ✅ Import Playlists Page
 
 const PageTitleUpdater = () => {
     const location = useLocation();
@@ -17,10 +18,9 @@ const PageTitleUpdater = () => {
     useEffect(() => {
         const titles = {
             "/": `Home | ${PROJECT_NAME}`,
-            "/about": `About | ${PROJECT_NAME}`,
-            "/contact": `Contact | ${PROJECT_NAME}`,
             "/settings": `Settings | ${PROJECT_NAME}`,
             "/upload-song": `Upload Song | ${PROJECT_NAME}`,
+            "/playlist": `Playlists | ${PROJECT_NAME}`,  // ✅ Update title for Playlists
         };
 
         document.title = titles[location.pathname] || PROJECT_NAME;
@@ -31,7 +31,6 @@ const PageTitleUpdater = () => {
 
 function App() {
     useEffect(() => {
-        // Apply theme and accent on load
         const savedTheme = localStorage.getItem("theme") || "light";
         const savedAccent = localStorage.getItem("accent") || "accent1";
 
@@ -41,18 +40,18 @@ function App() {
 
     return (
         <>
-            {/* Always Visible ThemeSwitcher */}
-            <ThemeSwitcher /> 
+            <ThemeSwitcher />
             <NavBar />
-            
+
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/upload-song" element={<UploadSong />} />
+                <Route path="/playlist" element={<Playlists />} />  {/* ✅ Add Playlist Route */}
             </Routes>
 
             <Footer />
-            <MediaPlayerModal /> {/* Media player stays at the bottom */}
+            <MediaPlayerModal />
         </>
     );
 }

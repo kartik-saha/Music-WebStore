@@ -7,10 +7,9 @@ const MediaPlayerModal = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [liked, setLiked] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
-    const [duration, setDuration] = useState(200); // Placeholder duration
-    const [isVisible, setIsVisible] = useState(false); // Track visibility of the modal
+    const [isVisible, setIsVisible] = useState(false);
     const audioRef = useRef(null);
-
+    
     useEffect(() => {
         if (audioRef.current) {
             audioRef.current.ontimeupdate = () => {
@@ -32,18 +31,24 @@ const MediaPlayerModal = () => {
 
     const handleSeek = (e) => {
         if (audioRef.current) {
-            const newTime = (e.nativeEvent.offsetX / e.target.offsetWidth) * duration;
+            const newTime = (e.nativeEvent.offsetX / e.target.offsetWidth) * audioRef.current.duration;
             setCurrentTime(newTime);
             audioRef.current.currentTime = newTime;
         }
     };
 
+    // Show modal immediately on hover
+    const showModal = () => setIsVisible(true);
+
+    // Hide modal & show button smoothly without delay
+    const hideModal = () => setIsVisible(false);
+
     return (
         <div className="media-player-wrapper">
-            {/* Music Note Toggle Button (Only show when modal is hidden) */}
-            <button
-                className={`music-toggle-btn ${isVisible ? 'hide-music-toggle' : ''}`}
-                onClick={() => setIsVisible(true)}
+            {/* Music Note Toggle Button */}
+            <button 
+                className={`music-toggle-btn ${isVisible ? 'hide-music-toggle' : 'show-music-toggle'}`} 
+                onMouseEnter={showModal}
             >
                 <FontAwesomeIcon icon={faMusic} />
             </button>
@@ -51,7 +56,8 @@ const MediaPlayerModal = () => {
             {/* Media Player Modal */}
             <div
                 className={`media-player-modal-container ${isVisible ? '' : 'media-player-hidden'}`}
-                onMouseLeave={() => setIsVisible(false)} // Hide modal when mouse leaves
+                onMouseEnter={showModal}
+                onMouseLeave={hideModal}
             >
                 {/* Audio Element */}
                 <audio ref={audioRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto" />
@@ -59,13 +65,10 @@ const MediaPlayerModal = () => {
                 {/* Seek Bar */}
                 <div className="seek-bar-container" onClick={handleSeek}>
                     <div className="seek-bar">
-                        <div
-                            className="seek-progress"
-                            style={{ width: `${(currentTime / duration) * 100}%` }}
-                        />
+                        <div className="seek-progress" style={{ width: `${(currentTime / (audioRef.current?.duration || 1)) * 100}%` }} />
                         <div className="seek-text">
-                            <span>{Math.floor(currentTime)}s</span>
-                            <span>{Math.floor(duration)}s</span>
+                            <span>{Math.floor(currentTime / 60)}:{String(Math.floor(currentTime % 60)).padStart(2, '0')}</span>
+                            <span>{audioRef.current?.duration ? `${Math.floor(audioRef.current.duration / 60)}:${String(Math.floor(audioRef.current.duration % 60)).padStart(2, '0')}` : '0:00'}</span>
                         </div>
                     </div>
                 </div>
@@ -73,11 +76,7 @@ const MediaPlayerModal = () => {
                 {/* Media Content */}
                 <div className="media-content">
                     {/* Cover Image */}
-                    <img
-                        src="https://via.placeholder.com/150"
-                        alt="Album Cover"
-                        className="media-cover"
-                    />
+                    <img src="https://via.placeholder.com/150" alt="Album Cover" className="media-cover" />
 
                     {/* Media Info */}
                     <div className="media-info">
