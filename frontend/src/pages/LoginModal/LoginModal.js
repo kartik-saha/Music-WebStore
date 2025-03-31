@@ -3,6 +3,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa";
 import "./LoginModal.css";
 
+
 const SITE_KEY = "6LcfXQIrAAAAAA68SEFqOqX6naSN8RgBm36qf5Du"; 
 
 const LoginModal = ({ isOpen, onClose }) => {
