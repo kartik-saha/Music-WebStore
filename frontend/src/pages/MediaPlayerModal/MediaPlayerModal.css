@@ -11,11 +11,9 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    /* background-color: var(--secondary-bg);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); */
-    transition: opacity 0.3s, transform 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
     opacity: 0;
-    transform: translateY(100px);
+    transform: translateX(60px);
     pointer-events: none;
 }
 
@@ -26,30 +24,47 @@
     pointer-events: auto;
 }
 
+/* Hide modal when not visible */
+.media-player-hidden {
+    opacity: 0;
+    transform: translateX(60px);
+    pointer-events: none;
+}
+
 /* Music Note Button (Toggle) */
 .music-toggle-btn {
     position: fixed;
-    bottom: 100px; /* Moved higher */
-    right: 30px;
+    bottom: 100px; /* Adjusted position */
+    right: 0px;
     background-color: var(--primary-accent);
     color: white;
     border: none;
-    border-radius: 50%;
-    padding: 12px;
+    border-radius: 15px 0 0 15px;
     cursor: pointer;
-    font-size: 20px;
-    transition: background-color 0.3s, transform 0.2s;
-    width: 45px;
-    height: 45px;
+    font-size: 1.8rem;
+    width: 120px;
+    height: 75px;
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: translateX(60px);
 }
 
-/* Hide button when modal is visible */
-.media-player-modal-container:not(.media-player-hidden) ~ .music-toggle-btn {
-    display: none;
+/* Smooth fade-in for button after modal fades out */
+.music-toggle-btn.show-music-toggle {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+}
+
+/* Smooth fade-out for button when modal is visible */
+.music-toggle-btn.hide-music-toggle {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.2);
+    transform: translateX(60px);
 }
 
 /* Button Hover Effect */
@@ -63,6 +78,7 @@
     height: 40px;
     width: 100%;
     position: relative;
+    cursor: pointer;
 }
 
 .seek-bar {
@@ -102,8 +118,9 @@
 
 /* Cover Image */
 .media-cover {
-    height: 150px;
-    width: 150px;
+    height: 130px;
+    width: 130px;
+    aspect-ratio: 1;
     object-fit: cover;
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -140,11 +157,11 @@
     border: none;
     cursor: pointer;
     font-size: 20px;
+    transition: transform 0.3s;
 }
 
 .heart-btn:hover {
-    scale: 1.1;
-    transition: 0.3s;
+    transform: scale(1.1);
 }
 
 /* Artist & Album Info */
@@ -176,52 +193,48 @@
     color: var(--primary-accent);
     font-size: 20px;
     cursor: pointer;
+    transition: transform 0.3s, color 0.3s;
 }
 
 .control-btn:hover {
-    scale: 1.1;
-    color: var(--secondary-accent);
-    transition: 0.3s;
-}
-
-/* Hide modal when not visible */
-.media-player-hidden {
-    opacity: 0;
-    transform: translateY(20px);
-    pointer-events: none;
-}
-
-
-/* Music Note Button (Toggle) */
-.music-toggle-btn {
-    position: fixed;
-    bottom: 120px; /* Moved higher */
-    right: 30px;
-    background-color: var(--primary-accent);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    padding: 12px;
-    cursor: pointer;
-    font-size: 20px;
-    transition: background-color 0.3s, transform 0.2s;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-/* Hide button when modal is visible */
-.hide-music-toggle {
-    display: none;
-}
-
-/* Button Hover Effect */
-.music-toggle-btn:hover {
-    background-color: var(--secondary-accent);
     transform: scale(1.1);
+    color: var(--secondary-accent);
 }
 
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .media-player-modal-container {
+        width: 90%;
+        right: 5%;
+        bottom: 10px;
+    }
 
+    .media-cover {
+        height: 100px;
+        width: 100px;
+    }
+
+    .media-info {
+        padding: 8px;
+    }
+
+    .song-title {
+        font-size: 16px;
+    }
+
+    .artist-name,
+    .album-name {
+        font-size: 12px;
+    }
+
+    .controls {
+        padding-top: 10px;
+    }
+
+    .music-toggle-btn {
+        width: 120px;
+        height: 60px;
+        font-size: 1.5rem;
+        bottom: 80px;
+    }
+}

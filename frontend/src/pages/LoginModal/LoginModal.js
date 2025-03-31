@@ -4,7 +4,7 @@ import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa";
 import "./LoginModal.css";
 
 
-const SITE_KEY = "6LcfXQIrAAAAAA68SEFqOqX6naSN8RgBm36qf5Du"; 
+const SITE_KEY = "6LcfXQIrAAAAAA68SEFqOqX6naSN8RgBm36qf5Du";
 
 const LoginModal = ({ isOpen, onClose }) => {
     const [isRegistering, setIsRegistering] = useState(false);
@@ -38,13 +38,52 @@ const LoginModal = ({ isOpen, onClose }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!captchaValue) {
-            alert("Please complete the CAPTCHA.");
+            alert("Please complete the CAPTCHA."); 
             return;
         }
-        console.log("Form submitted with:", formData, "CAPTCHA:", captchaValue);
+
+        if (isRegistering && formData.password !== formData.confirmPassword) {
+            alert("Passwords do not match!");
+            return;
+        }
+
+        const endpoint = isRegistering
+            ? "http://localhost:5000/api/auth/register"
+            : "http://localhost:5000/api/auth/login";
+        
+        const requestData = isRegistering
+            ? { username: formData.username, email: formData.email, password: formData.password }
+            : { email: formData.email, password: formData.password };
+
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestData),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error("Error response:", errorText);
+                alert("Something went wrong: " + errorText);
+                return;
+            }
+
+            const data = await response.json();
+            if (!isRegistering) {
+                localStorage.setItem("token", data.token);
+                alert("Login successful!");
+            } else {
+                alert("Registration successful! Please log in.");
+                setIsRegistering(false);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Server error. Try again later.");
+        }
     };
 
     const handleOAuthLogin = (provider, e) => {
@@ -57,10 +96,42 @@ const LoginModal = ({ isOpen, onClose }) => {
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <h2>{isRegistering ? "Register" : "Login"}</h2>
                 <form onSubmit={handleSubmit}>
-                    <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleInputChange} required />
-                    <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleInputChange} required />
-                    <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} required />
-                    {isRegistering && <input type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleInputChange} required />}
+                    {isRegistering && (
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Username"
+                            value={formData.username}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    )}
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        required
+                    />
+                    {isRegistering && (
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="Confirm Password"
+                            value={formData.confirmPassword}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    )}
 
                     {/* Social Login Section */}
                     <div className="social-login">
