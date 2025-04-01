@@ -5,7 +5,7 @@ import "./LoginModal.css";
 
 const SITE_KEY = "6LcfXQIrAAAAAA68SEFqOqX6naSN8RgBm36qf5Du";
 
-const LoginModal = ({ isOpen, onClose }) => {
+const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const [isRegistering, setIsRegistering] = useState(false);
     const [captchaValue, setCaptchaValue] = useState(null);
     const [formData, setFormData] = useState({
@@ -74,7 +74,8 @@ const LoginModal = ({ isOpen, onClose }) => {
             const data = await response.json();
             if (!isRegistering) {
                 localStorage.setItem("token", data.token);
-                alert("Login successful!");
+                // Pass the username and profile pic URL to the onLoginSuccess callback
+                onLoginSuccess({ username: data.username, profilePic: data.profilePic || null });
             } else {
                 alert("Registration successful! Please log in.");
                 setIsRegistering(false);
