@@ -1,9 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
-const songRoutes = require("./routes/songs"); // NEW
+const songRoutes = require("./routes/songs"); 
 
 const app = express();
 
@@ -20,7 +21,8 @@ app.use("/api", songRoutes); // NEW
 
 mongoose.connect("mongodb://localhost:27017/musicDB", { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("MongoDB Connected"))
-    .catch(err => console.log(err));
+    .catch(err => console.log("MongoDB Connection Error:", err));
+
 
 app.listen(5000, () => {
     console.log("Server running on port 5000");
