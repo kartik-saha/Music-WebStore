@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./NavBar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faUser, faCog, faUpload, faSearch, faList } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faUser, faUpload, faSearch, faList } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "../../pages/LoginModal/LoginModal";
 import { PROJECT_NAME } from "../../config";
@@ -82,7 +82,7 @@ const NavBar = () => {
     const handleMouseLeave = () => {
         hideTimeout.current = setTimeout(() => {
             setShowAccountModal(false);
-        }, 200); // Slight delay to prevent accidental flickering
+        }, 200);
     };
 
     return (
@@ -105,25 +105,20 @@ const NavBar = () => {
                 <nav>
                     <ul>
                         <li>
-                            <button onClick={() => navigate("/")}>
+                            <button onClick={() => navigate("/")}> 
                                 <FontAwesomeIcon icon={faHome} />
                             </button>
                         </li>
                         {username && (
                             <>
                                 <li>
-                                    <button onClick={() => navigate("/upload-song")}>
+                                    <button onClick={() => navigate("/upload-song")}> 
                                         <FontAwesomeIcon icon={faUpload} />
                                     </button>
                                 </li>
                                 <li>
-                                    <button onClick={() => navigate("/playlist")}>
+                                    <button onClick={() => navigate("/playlist")}> 
                                         <FontAwesomeIcon icon={faList} />
-                                    </button>
-                                </li>
-                                <li>
-                                    <button onClick={() => navigate("/settings")}>
-                                        <FontAwesomeIcon icon={faCog} />
                                     </button>
                                 </li>
                             </>
