@@ -1,9 +1,10 @@
-const express = require("express");
+// backend/routes/user.js
+const express = require('express');
 const router = express.Router();
+const authenticate = require('../middleware/authenticate');  // JWT middleware
+const userController = require('../controllers/userController');
 
-// Dummy route for testing
-router.get("/", (req, res) => {
-    res.send("User route is working!");
-});
+// Get user data
+router.get('/', authenticate, userController.getUserData);
 
 module.exports = router;

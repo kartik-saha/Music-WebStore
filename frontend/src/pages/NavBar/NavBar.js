@@ -1,39 +1,88 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./NavBar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faUser, faCog, faUpload, faSearch, faList } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "../../pages/LoginModal/LoginModal";
 import { PROJECT_NAME } from "../../config";
+import AccountModal from "../../pages/AccountModal/AccountModal";
 
 const NavBar = () => {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [username, setUsername] = useState(null); // Store the username after login
-    const [profilePic, setProfilePic] = useState(null); // Store the profile picture
+    const [username, setUsername] = useState(null);
+    const [profilePic, setProfilePic] = useState(null);
+    const [showAccountModal, setShowAccountModal] = useState(false);
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
+
+    const accountRef = useRef(null);
+    const modalRef = useRef(null);
+    let hideTimeout = useRef(null);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            fetchUserData(token);
+        }
+    }, []);
+
+    const fetchUserData = async (token) => {
+        try {
+            const response = await fetch("http://localhost:5000/api/auth/user", {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setUsername(data.username);
+                setProfilePic(data.profilePic);
+            } else {
+                console.error("Failed to fetch user data");
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    };
 
     const handleSearch = (e) => {
         e.preventDefault();
         navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     };
 
-    // This function generates a placeholder with the first letter of the username
     const generateProfileImage = () => {
         if (profilePic) {
             return <img src={profilePic} alt="Profile" className="profile-img" />;
         }
         if (username) {
-            const firstLetter = username.charAt(0).toUpperCase(); // Get first letter of username
-            return <div className="profile-placeholder">{firstLetter}</div>;
+            return <div className="profile-placeholder">{username.charAt(0).toUpperCase()}</div>;
         }
         return <FontAwesomeIcon icon={faUser} />;
     };
 
     const handleLoginSuccess = (userData) => {
-        setUsername(userData.username); // Set username after successful login
-        setProfilePic(userData.profilePic || null); // Set profile picture
-        setIsLoginOpen(false); // Close the login modal
+        setUsername(userData.username);
+        setProfilePic(userData.profilePic || null);
+        localStorage.setItem("token", userData.token);
+        setIsLoginOpen(false);
+    };
+
+    const handleLogout = () => {
+        setUsername(null);
+        setProfilePic(null);
+        localStorage.removeItem("token");
+        navigate("/");
+    };
+
+    const handleMouseEnter = () => {
+        clearTimeout(hideTimeout.current);
+        setShowAccountModal(true);
+    };
+
+    const handleMouseLeave = () => {
+        hideTimeout.current = setTimeout(() => {
+            setShowAccountModal(false);
+        }, 200); // Slight delay to prevent accidental flickering
     };
 
     return (
@@ -41,7 +90,6 @@ const NavBar = () => {
             <header className="navbar">
                 <div className="logo">{PROJECT_NAME}</div>
 
-                {/* Search Bar */}
                 <form className="search-bar" onSubmit={handleSearch}>
                     <input
                         type="text"
@@ -61,7 +109,6 @@ const NavBar = () => {
                                 <FontAwesomeIcon icon={faHome} />
                             </button>
                         </li>
-                        {/* Show only if user is logged in */}
                         {username && (
                             <>
                                 <li>
@@ -81,18 +128,38 @@ const NavBar = () => {
                                 </li>
                             </>
                         )}
-                        {/* Account/Profile button */}
-                        <li>
-                            <button onClick={() => setIsLoginOpen(true)}>
-                                {username ? generateProfileImage() : <FontAwesomeIcon icon={faUser} />}
+                        <li
+                            className="profile-button"
+                            ref={accountRef}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                        >
+                            <button onClick={() => !username && setIsLoginOpen(true)}>
+                                {generateProfileImage()}
                             </button>
+                            {username && (
+                                <AccountModal
+                                    username={username}
+                                    profilePic={profilePic}
+                                    onLogout={handleLogout}
+                                    show={showAccountModal}
+                                    onMouseEnter={handleMouseEnter}
+                                    onMouseLeave={handleMouseLeave}
+                                    modalRef={modalRef}
+                                />
+                            )}
                         </li>
                     </ul>
                 </nav>
             </header>
 
-            {/* Login Modal */}
-            <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} onLoginSuccess={handleLoginSuccess} />
+            {isLoginOpen && (
+                <LoginModal
+                    isOpen={isLoginOpen}
+                    onClose={() => setIsLoginOpen(false)}
+                    onLoginSuccess={handleLoginSuccess}
+                />
+            )}
         </>
     );
 };

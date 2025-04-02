@@ -3,10 +3,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config(); // Load environment variables
 
+// Import Routes
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
 const songRoutes = require("./routes/songs");
+const uploadRoutes = require("./routes/upload");
 
+// Initialize the app
 const app = express();
 
 // Middleware
@@ -16,14 +19,15 @@ app.use(express.json());
 // Serve uploaded files statically
 app.use("/uploads", express.static("uploads"));
 
-// Routes
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api", songRoutes);
+app.use("/api/songs", songRoutes);  // Correct route path for songs
+app.use("/api/upload", uploadRoutes);  // Added upload route
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/musicDB";
-mongoose.connect(MONGO_URI)
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("✅ MongoDB Connected"))
     .catch(err => console.error("❌ MongoDB Connection Error:", err));
 

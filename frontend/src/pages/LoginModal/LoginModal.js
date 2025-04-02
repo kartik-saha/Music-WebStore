@@ -1,3 +1,5 @@
+//LoginModal.js
+
 import React, { useState, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa";
