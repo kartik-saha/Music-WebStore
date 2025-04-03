@@ -39,10 +39,15 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!captchaValue) {
+
+        //Remove this code to enforce the captcha funcionality
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        if (window.location.hostname !== "localhost" && !captchaValue) {
             alert("Please complete the CAPTCHA.");
             return;
         }
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         if (isRegistering && formData.password !== formData.confirmPassword) {
             alert("Passwords do not match!");
