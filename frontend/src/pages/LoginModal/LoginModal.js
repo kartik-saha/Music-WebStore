@@ -1,5 +1,3 @@
-//LoginModal.js
-
 import React, { useState, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa";
@@ -54,7 +52,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
         const endpoint = isRegistering
             ? "http://localhost:5000/api/auth/register"
             : "http://localhost:5000/api/auth/login";
-        
+
         const requestData = isRegistering
             ? { username: formData.username, email: formData.email, password: formData.password }
             : { email: formData.email, password: formData.password };
@@ -66,18 +64,28 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
                 body: JSON.stringify(requestData),
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Error response:", errorText);
-                alert("Something went wrong: " + errorText);
+                console.error("Error response:", data);
+                alert("Login failed: " + (data.message || "Unknown error"));
                 return;
             }
 
-            const data = await response.json();
             if (!isRegistering) {
-                localStorage.setItem("token", data.token);
-                // Pass the username and profile pic URL to the onLoginSuccess callback
-                onLoginSuccess({ username: data.username, profilePic: data.profilePic || null });
+                // ✅ Store user info in localStorage
+                localStorage.setItem("accessToken", data.accessToken);
+                localStorage.setItem("refreshToken", data.refreshToken);
+                localStorage.setItem("username", data.username);
+                localStorage.setItem("email", data.email);
+                localStorage.setItem("profilePic", data.profilePic || "");
+
+                // ✅ Pass data to NavBar
+                onLoginSuccess({
+                    username: data.username,
+                    email: data.email,
+                    profilePic: data.profilePic || null,
+                });
             } else {
                 alert("Registration successful! Please log in.");
                 setIsRegistering(false);

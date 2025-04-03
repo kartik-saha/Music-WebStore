@@ -9,39 +9,52 @@ import AccountModal from "../../pages/AccountModal/AccountModal";
 
 const NavBar = () => {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [username, setUsername] = useState(null);
-    const [profilePic, setProfilePic] = useState(null);
+    const [user, setUser] = useState(null);
     const [showAccountModal, setShowAccountModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
 
     const accountRef = useRef(null);
-    const modalRef = useRef(null);
-    let hideTimeout = useRef(null);
+    const hideTimeout = useRef(null);
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            fetchUserData(token);
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            setIsLoading(false);
+            return;
         }
+
+        fetchUserData(token);
     }, []);
 
     const fetchUserData = async (token) => {
         try {
-            const response = await fetch("http://localhost:5000/api/auth/user", {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
+            const response = await fetch("http://localhost:5000/api/users/me", {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${token}` },
             });
+
             if (response.ok) {
                 const data = await response.json();
-                setUsername(data.username);
-                setProfilePic(data.profilePic);
+                setUser({ 
+                    username: data.username, 
+                    email: data.email, 
+                    profilePic: data.profilePic 
+                });
+
+                // Store user data locally
+                localStorage.setItem("username", data.username);
+                localStorage.setItem("email", data.email);
+                localStorage.setItem("profilePic", data.profilePic || "");
             } else {
-                console.error("Failed to fetch user data");
+                autoLogout();
             }
         } catch (error) {
             console.error("Error fetching user data:", error);
+            autoLogout();
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -50,27 +63,37 @@ const NavBar = () => {
         navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     };
 
-    const generateProfileImage = () => {
-        if (profilePic) {
-            return <img src={profilePic} alt="Profile" className="profile-img" />;
-        }
-        if (username) {
-            return <div className="profile-placeholder">{username.charAt(0).toUpperCase()}</div>;
-        }
-        return <FontAwesomeIcon icon={faUser} />;
-    };
-
     const handleLoginSuccess = (userData) => {
-        setUsername(userData.username);
-        setProfilePic(userData.profilePic || null);
-        localStorage.setItem("token", userData.token);
+        setUser(userData);
         setIsLoginOpen(false);
     };
 
-    const handleLogout = () => {
-        setUsername(null);
-        setProfilePic(null);
-        localStorage.removeItem("token");
+    const autoLogout = () => {
+        if (localStorage.getItem("accessToken")) {
+            alert("Session expired. Please log in again.");
+        }
+        handleLogout();
+    };
+
+    const handleLogout = async () => {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+            try {
+                await fetch("http://localhost:5000/api/auth/logout", {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token}` },
+                });
+            } catch (error) {
+                console.error("Logout error:", error);
+            }
+        }
+
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("username");
+        localStorage.removeItem("email");
+        localStorage.removeItem("profilePic");
+
+        setUser(null);
         navigate("/");
     };
 
@@ -84,6 +107,8 @@ const NavBar = () => {
             setShowAccountModal(false);
         }, 200);
     };
+
+    if (isLoading) return null;
 
     return (
         <>
@@ -109,7 +134,7 @@ const NavBar = () => {
                                 <FontAwesomeIcon icon={faHome} />
                             </button>
                         </li>
-                        {username && (
+                        {user && (
                             <>
                                 <li>
                                     <button onClick={() => navigate("/upload-song")}> 
@@ -129,18 +154,26 @@ const NavBar = () => {
                             onMouseEnter={handleMouseEnter}
                             onMouseLeave={handleMouseLeave}
                         >
-                            <button onClick={() => !username && setIsLoginOpen(true)}>
-                                {generateProfileImage()}
+                            <button onClick={() => !user && setIsLoginOpen(true)}>
+                                {user ? (
+                                    user.profilePic ? (
+                                        <img src={user.profilePic} alt="Profile" className="profile-img" />
+                                    ) : (
+                                        <div className="profile-placeholder">{user.username.charAt(0).toUpperCase()}</div>
+                                    )
+                                ) : (
+                                    <FontAwesomeIcon icon={faUser} />
+                                )}
                             </button>
-                            {username && (
+                            {user && (
                                 <AccountModal
-                                    username={username}
-                                    profilePic={profilePic}
+                                    username={user.username}
+                                    email={user.email}
+                                    profilePic={user.profilePic}
                                     onLogout={handleLogout}
                                     show={showAccountModal}
                                     onMouseEnter={handleMouseEnter}
                                     onMouseLeave={handleMouseLeave}
-                                    modalRef={modalRef}
                                 />
                             )}
                         </li>

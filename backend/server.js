@@ -21,9 +21,9 @@ app.use("/uploads", express.static("uploads"));
 
 // API Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/songs", songRoutes);  // Correct route path for songs
-app.use("/api/upload", uploadRoutes);  // Added upload route
+app.use("/api/users", userRoutes); // ✅ Added support for user data fetching
+app.use("/api/songs", songRoutes);
+app.use("/api/upload", uploadRoutes);
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/musicDB";
