@@ -1,14 +1,35 @@
+// import React from "react";
+// import ReactDOM from "react-dom/client";
+// import "./index.css";
+// import AppWithRouter from "./App"; // ✅ Use new wrapper function
+// import reportWebVitals from "./reportWebVitals";
+
+// const root = ReactDOM.createRoot(document.getElementById("root"));
+// root.render(
+//   <React.StrictMode>
+//     <AppWithRouter /> {/* ✅ Ensures Router is always wrapped */}
+//   </React.StrictMode>
+// );
+
+// reportWebVitals();
+
 import React from "react";
-import ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import "./index.css";
-import AppWithRouter from "./App"; // ✅ Use new wrapper function
-import reportWebVitals from "./reportWebVitals";
+import { Auth0Provider } from "@auth0/auth0-react";
+import App from "./App";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
+
 root.render(
-  <React.StrictMode>
-    <AppWithRouter /> {/* ✅ Ensures Router is always wrapped */}
-  </React.StrictMode>
+  <Auth0Provider
+    domain="dev-dpngzka6og8x8sba.us.auth0.com"
+    clientId="e42OhhbD0HmEG863T7Oxw3fh3ESF96dC"
+    authorizationParams={{
+      redirect_uri: window.location.origin
+    }}
+  >
+    <App />
+  </Auth0Provider>
 );
-
-reportWebVitals();

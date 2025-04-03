@@ -3,8 +3,8 @@ import "./NavBar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faUser, faCog, faUpload, faSearch, faList } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import LoginModal from "../../pages/LoginModal/LoginModal";
-import { PROJECT_NAME } from "../../config";
+import LoginModal from "../../pages/LoginModal/LoginModal"; // ✅ Ensure the path is correct
+import { PROJECT_NAME } from "../../config"; // ✅ Ensure `PROJECT_NAME` is correctly imported
 
 const NavBar = () => {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -13,6 +13,7 @@ const NavBar = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
+        if (searchQuery.trim() === "") return; // ✅ Prevent empty search
         navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     };
 
@@ -66,7 +67,7 @@ const NavBar = () => {
             </header>
 
             {/* Login Modal */}
-            <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+            {isLoginOpen && <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />}
         </>
     );
 };
