@@ -1,3 +1,5 @@
+//LoginModal.js
+
 import React, { useState, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { FaGoogle, FaTwitter, FaFacebook } from "react-icons/fa";
@@ -39,15 +41,10 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        //Remove this code to enforce the captcha funcionality
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        if (window.location.hostname !== "localhost" && !captchaValue) {
+        if (!captchaValue) {
             alert("Please complete the CAPTCHA.");
             return;
         }
-        
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         if (isRegistering && formData.password !== formData.confirmPassword) {
             alert("Passwords do not match!");
@@ -57,7 +54,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
         const endpoint = isRegistering
             ? "http://localhost:5000/api/auth/register"
             : "http://localhost:5000/api/auth/login";
-
+        
         const requestData = isRegistering
             ? { username: formData.username, email: formData.email, password: formData.password }
             : { email: formData.email, password: formData.password };
@@ -69,28 +66,18 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
                 body: JSON.stringify(requestData),
             });
 
-            const data = await response.json();
-
             if (!response.ok) {
-                console.error("Error response:", data);
-                alert("Login failed: " + (data.message || "Unknown error"));
+                const errorText = await response.text();
+                console.error("Error response:", errorText);
+                alert("Something went wrong: " + errorText);
                 return;
             }
 
+            const data = await response.json();
             if (!isRegistering) {
-                // ✅ Store user info in localStorage
-                localStorage.setItem("accessToken", data.accessToken);
-                localStorage.setItem("refreshToken", data.refreshToken);
-                localStorage.setItem("username", data.username);
-                localStorage.setItem("email", data.email);
-                localStorage.setItem("profilePic", data.profilePic || "");
-
-                // ✅ Pass data to NavBar
-                onLoginSuccess({
-                    username: data.username,
-                    email: data.email,
-                    profilePic: data.profilePic || null,
-                });
+                localStorage.setItem("token", data.token);
+                // Pass the username and profile pic URL to the onLoginSuccess callback
+                onLoginSuccess({ username: data.username, profilePic: data.profilePic || null });
             } else {
                 alert("Registration successful! Please log in.");
                 setIsRegistering(false);
