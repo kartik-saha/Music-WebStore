@@ -63,7 +63,7 @@
 /* Theme Container */
 .theme-container {
     position: fixed;
-    top: calc(50% - 200px);
+    top: calc(50% - 50px);
     right: 0;
     transform: translateY(-50%);
     z-index: 1000;
