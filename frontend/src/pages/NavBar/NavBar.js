@@ -20,7 +20,10 @@ const NavBar = () => {
     return (
         <>
             <header className="navbar">
-                <div className="logo">{PROJECT_NAME}</div>
+            <div className="logo">
+                    {PROJECT_NAME}
+            </div>
+
 
                 {/* Search Bar */}
                 <form className="search-bar" onSubmit={handleSearch}>

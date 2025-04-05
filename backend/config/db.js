@@ -17,8 +17,3 @@ const connectDB = async () => {
 
 
 module.exports = connectDB;
-
-// jpbe6IbXtTGMU3Zy
-
-// mongodb+srv://<db_username>:<db_password>@music-app.lvd3zng.mongodb.net/?retryWrites=true&w=majority&appName=music-app
-

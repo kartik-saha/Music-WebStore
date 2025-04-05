@@ -5,12 +5,12 @@ import Footer from "./pages/Footer/Footer";
 import ThemeSwitcher from "./pages/ThemeSwitcher/ThemeSwitcher";
 import MediaPlayerModal from "./pages/MediaPlayerModal/MediaPlayerModal"; 
 import { PROJECT_NAME } from "./config";
-
+import PageNotFound from "./PageNotFound";
 // Import pages
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Settings from "./pages/Settings/Settings";
 import UploadSong from "./pages/UploadSong/UploadSong";
-import Playlists from "./pages/Playlists/Playlists";  // ✅ Import Playlists Page
+import Playlists from "./pages/Playlists/Playlists";
 
 const PageTitleUpdater = () => {
     const location = useLocation();
@@ -20,7 +20,7 @@ const PageTitleUpdater = () => {
             "/": `Home | ${PROJECT_NAME}`,
             "/settings": `Settings | ${PROJECT_NAME}`,
             "/upload-song": `Upload Song | ${PROJECT_NAME}`,
-            "/playlist": `Playlists | ${PROJECT_NAME}`,  // ✅ Update title for Playlists
+            "/playlist": `Playlists | ${PROJECT_NAME}`,
         };
 
         document.title = titles[location.pathname] || PROJECT_NAME;
@@ -42,14 +42,13 @@ function App() {
         <>
             <ThemeSwitcher />
             <NavBar />
-
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/upload-song" element={<UploadSong />} />
-                <Route path="/playlist" element={<Playlists />} />  {/* ✅ Add Playlist Route */}
+                <Route path="/playlist" element={<Playlists />} />
+                <Route path="*" element={<PageNotFound />} /> {/* Catch-all route for 404 */}
             </Routes>
-
             <Footer />
             <MediaPlayerModal />
         </>
