@@ -34,62 +34,102 @@ function App() {
     const [user, setUser] = useState(null);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
 
-    useEffect(() => {
-        const checkLoginStatus = async () => {
-            const token = localStorage.getItem("accessToken"); 
-            if (!token) return;
+    const checkLoginStatus = async () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token) return;
 
-            try {
-                const response = await fetch("http://localhost:5000/api/users/me", {
-                    method: "GET",
-                    headers: { Authorization: `Bearer ${token}` },
+        try {
+            const response = await fetch("http://localhost:5000/api/users/me", {
+                method: "GET",
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setUser({
+                    username: data.username,
+                    email: data.email,
+                    profilePic: data.profilePic,
                 });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setUser({ 
-                        username: data.username, 
-                        email: data.email,  // ✅ Now includes email
-                        profilePic: data.profilePic 
-                    });
-                } else {
-                    localStorage.removeItem("accessToken"); 
-                }
-            } catch (error) {
-                console.error("Error verifying token:", error);
-                localStorage.removeItem("accessToken");
+            } else {
+                console.warn("Access token might be expired. Attempting to refresh...");
+                await tryRefreshToken();
             }
-        };
+        } catch (error) {
+            console.error("Error verifying token:", error);
+            await tryRefreshToken();
+        }
+    };
 
+    const tryRefreshToken = async () => {
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (!refreshToken) {
+            handleLogout();
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:5000/api/auth/refresh-token", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ refreshToken }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("accessToken", data.accessToken);
+                localStorage.setItem("refreshToken", data.refreshToken);
+                await checkLoginStatus(); // Try again with new access token
+            } else {
+                console.error("Refresh token invalid or expired. Logging out.");
+                handleLogout();
+            }
+        } catch (error) {
+            console.error("Refresh token error:", error);
+            handleLogout();
+        }
+    };
+
+    useEffect(() => {
         checkLoginStatus();
     }, []);
 
     const handleLoginSuccess = (userData) => {
         setUser(userData);
         setIsLoginOpen(false);
+        localStorage.setItem("accessToken", userData.accessToken);
+        localStorage.setItem("refreshToken", userData.refreshToken);
     };
 
     const handleLogout = async () => {
         const token = localStorage.getItem("accessToken");
-        if (token) {
-            try {
+
+        try {
+            if (token) {
                 await fetch("http://localhost:5000/api/auth/logout", {
                     method: "POST",
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ userId: user?._id }), // optional
                 });
-            } catch (error) {
-                console.error("Logout error:", error);
             }
+        } catch (error) {
+            console.error("Logout error:", error);
         }
-        
+
         localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         setUser(null);
     };
 
     return (
         <>
             <ThemeSwitcher />
-            <NavBar user={user} onLogout={handleLogout} /> {/* ✅ Passing email to NavBar */}
+            <NavBar user={user} onLogout={handleLogout} />
 
             <Routes>
                 <Route path="/" element={<LandingPage />} />
@@ -100,8 +140,11 @@ function App() {
 
             <Footer />
             <MediaPlayerModal />
-
-            <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} onLoginSuccess={handleLoginSuccess} />
+            <LoginModal
+                isOpen={isLoginOpen}
+                onClose={() => setIsLoginOpen(false)}
+                onLoginSuccess={handleLoginSuccess}
+            />
         </>
     );
 }
