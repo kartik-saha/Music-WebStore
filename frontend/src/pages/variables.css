@@ -1,8 +1,115 @@
+/*variable.css*/
+
 :root {
-    --primary-bg: #1a1a1a;
-    --secondary-bg: #121212;
-    --primary-color: white;
-    --accent-color: #1db954;
-    --accent-hover: #17a347;
-    --font-family: Arial, sans-serif;
+    /* Default Light Mode (Accent Blue) */
+    --primary-bg: #ffffff;
+    --secondary-bg: #e0e0e0; /* Slightly darker */
+    --font-color: #222;
+    --font-color-compliment: #ffffff;
+    --primary-accent: #007bff;
+    --secondary-accent: #0056b3;
+}
+
+/* LIGHT THEMES */
+
+/* Light Mode - Blue */
+[data-theme="light"][data-accent="accent1"] {
+    --primary-bg: #ffffff;
+    --secondary-bg: #d0e4f7; /* Slightly darker */
+    --font-color: #222;
+    --font-color-compliment: #ffffff;
+    --primary-accent: #1e90ff;
+    --secondary-accent: #0d47a1; /* Reverted */
+}
+
+/* Light Mode - Red */
+[data-theme="light"][data-accent="accent2"] {
+    --primary-bg: #ffffff;
+    --secondary-bg: #e9c3c6; /* Slightly darker */
+    --font-color: #222;
+    --font-color-compliment: #ffffff;
+    --primary-accent: #dc3545;
+    --secondary-accent: #b71c1c; /* Reverted */
+}
+
+/* Light Mode - Green */
+[data-theme="light"][data-accent="accent3"] {
+    --primary-bg: #ffffff;
+    --secondary-bg: #c3e5ca; /* Slightly darker */
+    --font-color: #222;
+    --font-color-compliment: #ffffff;
+    --primary-accent: #28a745;
+    --secondary-accent: #155724; /* Reverted */
+}
+
+/* Light Mode - Orange */
+[data-theme="light"][data-accent="accent4"] {
+    --primary-bg: #ffffff;
+    --secondary-bg: #f0d2a0; /* Slightly darker */
+    --font-color: #222;
+    --font-color-compliment: #ffffff;
+    --primary-accent: #fd7e14;
+    --secondary-accent: #e65100; /* Reverted */
+}
+
+/* Light Mode - Purple */
+[data-theme="light"][data-accent="accent5"] {
+    --primary-bg: #ffffff;
+    --secondary-bg: #d9c2f4; /* Slightly darker */
+    --font-color: #222;
+    --font-color-compliment: #ffffff;
+    --primary-accent: #6f42c1;
+    --secondary-accent: #3e1f92; /* Reverted */
+}
+
+/* DARK THEMES (Unchanged) */
+
+/* Dark Mode - Blue */
+[data-theme="dark"][data-accent="accent1"] {
+    --primary-bg: #222;
+    --secondary-bg: #404040;
+    --font-color: #ffffff;
+    --font-color-compliment: #222;
+    --primary-accent: #1e90ff;
+    --secondary-accent: #0d47a1;
+}
+
+/* Dark Mode - Red */
+[data-theme="dark"][data-accent="accent2"] {
+    --primary-bg: #222;
+    --secondary-bg: #442222;
+    --font-color: #ffffff;
+    --font-color-compliment: #222;
+    --primary-accent: #dc3545;
+    --secondary-accent: #b71c1c;
+}
+
+/* Dark Mode - Green */
+[data-theme="dark"][data-accent="accent3"] {
+    --primary-bg: #222;
+    --secondary-bg: #224422;
+    --font-color: #ffffff;
+    --font-color-compliment: #222;
+    --primary-accent: #28a745;
+    --secondary-accent: #155724;
+}
+
+/* Dark Mode - Orange */
+[data-theme="dark"][data-accent="accent4"] {
+    --primary-bg: #222;
+    --secondary-bg: #442200;
+    --font-color: #ffffff;
+    --font-color-compliment: #222;
+    --primary-accent: #fd7e14;
+    --secondary-accent: #e65100;
+}
+
+/* Dark Mode - Purple */
+[data-theme="dark"][data-accent="accent5"] {
+    --primary-bg: #222;
+    --secondary-bg: #322244;
+    --font-color: #ffffff;
+    --font-color-compliment: #222;
+    --primary-accent: #6f42c1;
+    --secondary-accent: #3e1f92;
 }

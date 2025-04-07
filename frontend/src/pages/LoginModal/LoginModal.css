@@ -1,0 +1,120 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--primary-bg);
+    color: var(--font-color);
+    padding: 30px;
+    padding-bottom: 60px;
+    border-radius: 10px;
+    width: 420px;
+    max-width: 90%;
+    text-align: center;
+    box-sizing: border-box;
+
+    /* Center everything */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Make everything the same width */
+.modal-content h2,
+.modal-content form,
+.modal-content input,
+.modal-content button {
+    width: 100%;
+    max-width: 320px;
+}
+
+/* Form layout */
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Input fields */
+.modal-content input {
+    padding: 12px;
+    border: 1px solid var(--secondary-bg);
+    border-radius: 5px;
+    box-sizing: border-box;
+    background: var(--secondary-bg);
+    color: var(--font-color);
+}
+
+/* Login/Register button */
+.modal-content button {
+    padding: 12px;
+    background: var(--primary-accent);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+/* Hover effect */
+.modal-content button:hover {
+    background: var(--secondary-accent);
+}
+
+/* Social Login Section */
+.social-login {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 320px;
+    margin: 15px 0;
+}
+
+.social-login span {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--font-color);
+}
+
+.social-icons {
+    display: flex;
+    gap: 12px;
+}
+
+.social-icon {
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--primary-accent);
+    transition: transform 0.2s ease-in-out, color 0.3s;
+}
+
+.social-icon:hover {
+    transform: scale(1.1);
+    color: var(--secondary-accent);
+}
+
+.captcha-container {
+    width: 100%;
+    max-width: 320px; /* Match input field width */
+    display: flex;
+    justify-content: center;
+    transform: scale(1.05); /* Adjust scale to fit */
+    transform-origin: center;
+}
+
+.g-recaptcha {
+    transform: scale(1); /* Adjust size if needed */
+    transform-origin: center;
+}
