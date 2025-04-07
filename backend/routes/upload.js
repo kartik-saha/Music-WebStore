@@ -1,80 +1,126 @@
 const express = require("express");
-const multer = require("multer");
-const { GridFsStorage } = require("multer-gridfs-storage");
 const mongoose = require("mongoose");
+const multer = require("multer");
 const Song = require("../models/Song");
+const { Readable } = require("stream");
 require("dotenv").config();
 
 const router = express.Router();
 
-// Use existing MongoDB connection
-const conn = mongoose.connection;
-let gridFSBucket;
-
-conn.once("open", () => {
-  gridFSBucket = new mongoose.mongo.GridFSBucket(conn.db, {
-    bucketName: "uploads",
-  });
-  console.log("GridFS initialized in upload.js");
-});
-
-// Storage Configuration
-const storage = new GridFsStorage({
-  url: process.env.MONGO_URI,
-  file: (req, file) => {
-    return {
-      bucketName: "uploads",
-      filename: `${Date.now()}-${file.originalname}`,
-    };
-  },
-});
-
+// Use Multer to buffer files into memory
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Upload Song Route
-router.post("/upload-song", upload.fields([{ name: "songFile" }, { name: "coverImage" }]), async (req, res) => {
-  try {
-    console.log("Upload request received:", req.body);
-    console.log("Uploaded files:", req.files);
+// Create GridFSBucket
+let gridFSBucket;
+mongoose.connection.once("open", () => {
+  gridFSBucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+    bucketName: "uploads",
+  });
+  console.log("✅ GridFSBucket initialized");
+});
 
-    const songFile = req.files["songFile"] ? req.files["songFile"][0].filename : null;
-    const coverImage = req.files["coverImage"] ? req.files["coverImage"][0].filename : null;
-    const { songTitle, songArtist, genre, album } = req.body;
+// ✅ Upload route (manual upload to GridFS)
+router.post(
+  "/upload-song",
+  upload.fields([
+    { name: "songFile", maxCount: 1 },
+    { name: "coverImage", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    try {
+      const { songTitle, songArtist, genre, album } = req.body;
+      const songFileBuffer = req.files?.songFile?.[0];
+      const coverImageBuffer = req.files?.coverImage?.[0];
 
-    if (!songFile || !songTitle || !songArtist) {
-      return res.status(400).json({ message: "Missing required fields." });
+      if (!songTitle || !songArtist || !songFileBuffer) {
+        return res.status(400).json({ message: "Missing required fields." });
+      }
+
+      // Upload song file to GridFS
+      const songFileStream = Readable.from(songFileBuffer.buffer);
+      const songFileName = `${Date.now()}-${songFileBuffer.originalname}`;
+      const songUploadStream = gridFSBucket.openUploadStream(songFileName, {
+        metadata: { originalname: songFileBuffer.originalname },
+      });
+
+      songFileStream.pipe(songUploadStream);
+
+      songUploadStream.on("error", (err) => {
+        console.error("❌ Song file upload failed:", err);
+        return res.status(500).json({ message: "Song file upload failed" });
+      });
+
+      songUploadStream.on("finish", async (songFileData) => {
+        let coverImageFileName = null;
+
+        if (coverImageBuffer) {
+          // Upload cover image too
+          const coverStream = Readable.from(coverImageBuffer.buffer);
+          coverImageFileName = `${Date.now()}-${coverImageBuffer.originalname}`;
+          const coverUploadStream = gridFSBucket.openUploadStream(coverImageFileName, {
+            metadata: { originalname: coverImageBuffer.originalname },
+          });
+
+          coverStream.pipe(coverUploadStream);
+
+          coverUploadStream.on("error", (err) => {
+            console.error("❌ Cover image upload failed:", err);
+          });
+
+          coverUploadStream.on("finish", async () => {
+            await saveSongRecord(songTitle, songArtist, genre, album, songFileName, coverImageFileName, res);
+          });
+        } else {
+          await saveSongRecord(songTitle, songArtist, genre, album, songFileName, null, res);
+        }
+      });
+    } catch (err) {
+      console.error("❌ Upload route error:", err);
+      res.status(500).json({ message: "Unexpected error", error: err.message });
     }
+  }
+);
 
+// ✅ Save metadata to MongoDB
+async function saveSongRecord(title, artist, genre, album, songFile, coverImage, res) {
+  try {
     const newSong = new Song({
-      songTitle,
-      songArtist,
+      songTitle: title,
+      songArtist: artist,
       genre,
       album,
       songFile,
       coverImage,
     });
 
-    console.log("Saving song metadata:", newSong);
     await newSong.save();
-
+    console.log("✅ Song metadata saved:", newSong);
     res.status(201).json({ message: "Song uploaded successfully!", song: newSong });
-  } catch (error) {
-    console.error("Upload Error:", error);
-    res.status(500).json({ message: "File upload failed", error: error.message });
+  } catch (err) {
+    console.error("❌ Failed to save song metadata:", err);
+    res.status(500).json({ message: "Metadata save failed", error: err.message });
+  }
+}
+
+// ✅ Download route
+router.get("/files/:filename", async (req, res) => {
+  try {
+    const file = await mongoose.connection.db
+      .collection("uploads.files")
+      .findOne({ filename: req.params.filename });
+
+    if (!file) return res.status(404).json({ message: "File not found" });
+
+    gridFSBucket.openDownloadStreamByName(req.params.filename).pipe(res);
+  } catch (err) {
+    res.status(500).json({ message: "Error retrieving file", error: err.message });
   }
 });
 
-// Fetch Song or Cover Image
-router.get("/files/:filename", async (req, res) => {
-  try {
-    const file = await conn.db.collection("uploads.files").findOne({ filename: req.params.filename });
-    if (!file) {
-      return res.status(404).json({ message: "File not found" });
-    }
-    gridFSBucket.openDownloadStreamByName(req.params.filename).pipe(res);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching file", error: error.message });
-  }
+// ✅ Test route
+router.get("/test", (req, res) => {
+  res.send("✅ Upload route working!");
 });
 
 module.exports = router;
