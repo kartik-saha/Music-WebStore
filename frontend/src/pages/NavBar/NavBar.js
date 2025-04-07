@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./NavBar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faUser, faUpload, faSearch, faList } from "@fortawesome/free-solid-svg-icons";
@@ -18,17 +18,39 @@ const NavBar = () => {
     const accountRef = useRef(null);
     const hideTimeout = useRef(null);
 
-    useEffect(() => {
+    // Only adding useCallback to handleLogout
+    const handleLogout = useCallback(async () => {
         const token = localStorage.getItem("accessToken");
-        if (!token) {
-            setIsLoading(false);
-            return;
+        if (token) {
+            try {
+                await fetch("http://localhost:5000/api/auth/logout", {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token}` },
+                });
+            } catch (error) {
+                console.error("Logout error:", error);
+            }
         }
 
-        fetchUserData(token);
-    }, []);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("username");
+        localStorage.removeItem("email");
+        localStorage.removeItem("profilePic");
 
-    const fetchUserData = async (token) => {
+        setUser(null);
+        navigate("/");
+    }, [navigate]);
+
+    // Adding useCallback to autoLogout
+    const autoLogout = useCallback(() => {
+        if (localStorage.getItem("accessToken")) {
+            alert("Session expired. Please log in again.");
+        }
+        handleLogout();
+    }, [handleLogout]);
+
+    // Adding useCallback to fetchUserData
+    const fetchUserData = useCallback(async (token) => {
         try {
             const response = await fetch("http://localhost:5000/api/users/me", {
                 method: "GET",
@@ -56,45 +78,27 @@ const NavBar = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [autoLogout]);
+
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            setIsLoading(false);
+            return;
+        }
+
+        fetchUserData(token);
+    }, [fetchUserData]);  // Add fetchUserData to dependency array
 
     const handleSearch = (e) => {
         e.preventDefault();
+        if (searchQuery.trim() === "") return; // ✅ Prevent empty search
         navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     };
 
     const handleLoginSuccess = (userData) => {
         setUser(userData);
         setIsLoginOpen(false);
-    };
-
-    const autoLogout = () => {
-        if (localStorage.getItem("accessToken")) {
-            alert("Session expired. Please log in again.");
-        }
-        handleLogout();
-    };
-
-    const handleLogout = async () => {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-            try {
-                await fetch("http://localhost:5000/api/auth/logout", {
-                    method: "POST",
-                    headers: { "Authorization": `Bearer ${token}` },
-                });
-            } catch (error) {
-                console.error("Logout error:", error);
-            }
-        }
-
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("username");
-        localStorage.removeItem("email");
-        localStorage.removeItem("profilePic");
-
-        setUser(null);
-        navigate("/");
     };
 
     const handleMouseEnter = () => {
@@ -113,7 +117,10 @@ const NavBar = () => {
     return (
         <>
             <header className="navbar">
-                <div className="logo">{PROJECT_NAME}</div>
+            <div className="logo">
+                    {PROJECT_NAME}
+            </div>
+
 
                 <form className="search-bar" onSubmit={handleSearch}>
                     <input

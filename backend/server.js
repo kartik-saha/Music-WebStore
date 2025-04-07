@@ -4,6 +4,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 
+
+// cors options to allow requests from the frontend
+const corsOptions={
+    origin:  "https://localhost:3000",
+    methods: "GET,HEAD,PUT,POST,PATCH,DELETE",
+    credentials:true
+}
 // Import Routes
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");

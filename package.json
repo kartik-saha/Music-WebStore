@@ -1,8 +1,21 @@
 {
+  "name": "music-webstore",
+  "version": "1.0.0",
+  "description": "Songeet is a feature-rich online music webstore designed to offer seamless music streaming, purchase, and artist engagement. The platform connects music enthusiasts with artists, providing an interactive and user-friendly experience for discovering, playing, and managing music.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "github:fortawesome/react-fontawesome",
+    "aws-jwt-verify": "^5.0.0",
     "express": "^4.21.2",
+    "jose": "^6.0.10",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.15.0",
     "mongoose": "^8.13.0"
   }

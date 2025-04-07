@@ -34,6 +34,16 @@ function App() {
     const [user, setUser] = useState(null);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
 
+    useEffect(() => {
+        const savedTheme = localStorage.getItem("theme") || "light";
+        const savedAccent = localStorage.getItem("accent") || "accent1";
+
+        document.documentElement.setAttribute("data-theme", savedTheme);
+        document.documentElement.setAttribute("data-accent", savedAccent);
+
+        checkLoginStatus();
+    }, []);
+
     const checkLoginStatus = async () => {
         const token = localStorage.getItem("accessToken");
         if (!token) return;
@@ -92,10 +102,6 @@ function App() {
         }
     };
 
-    useEffect(() => {
-        checkLoginStatus();
-    }, []);
-
     const handleLoginSuccess = (userData) => {
         setUser(userData);
         setIsLoginOpen(false);
@@ -137,7 +143,6 @@ function App() {
                 <Route path="/upload-song" element={<UploadSong />} />
                 <Route path="/playlist" element={<Playlists />} />
             </Routes>
-
             <Footer />
             <MediaPlayerModal />
             <LoginModal
@@ -157,3 +162,4 @@ export default function AppWithRouter() {
         </Router>
     );
 }
+
