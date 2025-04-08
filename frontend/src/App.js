@@ -12,6 +12,7 @@ import LandingPage from "./pages/LandingPage/LandingPage";
 import Settings from "./pages/Settings/Settings";
 import UploadSong from "./pages/UploadSong/UploadSong";
 import Playlists from "./pages/Playlists/Playlists";
+import SearchPage from "./pages/SearchPage/SearchPage"; // ⬅️ Added
 
 const PageTitleUpdater = () => {
     const location = useLocation();
@@ -22,6 +23,7 @@ const PageTitleUpdater = () => {
             "/settings": `Settings | ${PROJECT_NAME}`,
             "/upload-song": `Upload Song | ${PROJECT_NAME}`,
             "/playlist": `Playlists | ${PROJECT_NAME}`,
+            "/search": `Search | ${PROJECT_NAME}`, // ⬅️ Added
         };
 
         document.title = titles[location.pathname] || PROJECT_NAME;
@@ -114,7 +116,7 @@ function App() {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ userId: user?._id }), // optional
+                    body: JSON.stringify({ userId: user?._id }),
                 });
             }
         } catch (error) {
@@ -136,6 +138,7 @@ function App() {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/upload-song" element={<UploadSong />} />
                 <Route path="/playlist" element={<Playlists />} />
+                <Route path="/search" element={<SearchPage />} /> {/* ⬅️ Added */}
             </Routes>
 
             <Footer />
