@@ -1,68 +1,63 @@
 @import url("../variables.css");
 
-.settings-container {
+.settings-wrapper {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 40px;
-  min-height: 80vh;
   background-color: var(--primary-bg);
+  min-height: 80vh;
+}
+
+.settings-list {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.settings-section {
+  background-color: var(--secondary-bg);
+  padding: 32px;
+  border-radius: 16px;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.settings-heading {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--font-color);
+  margin-bottom: 60px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--font-color);
+  margin-bottom: 10px;
+}
+
+.section-description {
+  font-size: 14px;
+  color: var(--font-color);
 }
 
 .settings-form {
   display: flex;
-  gap: 40px;
-  width: 100%;
-  max-width: 1000px;
-  background-color: var(--secondary-bg);
-  padding: 40px;
-  border-radius: 16px;
-}
-
-.settings-left {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.profile-upload-label {
-  width: 160px;
-  height: 160px;
-  background-color: var(--primary-bg);
-  border-radius: 20px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.profile-upload-label:hover img {
-  transform: scale(1.05);
-}
-
-.profile-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 20px;
-  transition: transform 0.3s ease;
-}
-
-.upload-placeholder {
-  color: var(--font-color);
-  text-align: center;
-  padding: 10px;
-  font-size: 14px;
-}
-
-.settings-right {
-  flex: 2;
-  display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.settings-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--font-color);
+  margin-bottom: 4px;
 }
 
 .settings-input {
@@ -73,6 +68,7 @@
   border: none;
   border-radius: 10px;
   outline: none;
+  margin-bottom: 20px;
 }
 
 .settings-input:focus {
@@ -85,7 +81,7 @@
   font-size: 15px;
   font-weight: bold;
   background-color: var(--primary-accent);
-  color: var(--font-color-compliment);
+  color: white;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -95,4 +91,3 @@
 .settings-submit-button:hover {
   background-color: var(--secondary-accent);
 }
-

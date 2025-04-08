@@ -55,35 +55,48 @@ const Settings = () => {
   };
 
   return (
-    <div className="settings-container">
-      <form className="settings-form" onSubmit={handleSubmit}>
-        <div className="settings-right">
-          <input
-            className="settings-input"
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <input
-            className="settings-input"
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            className="settings-input"
-            type="password"
-            placeholder="New Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button type="submit" className="settings-submit-button">
-            Update Profile
-          </button>
-        </div>
-      </form>
+    <div className="settings-wrapper">
+      <ul className="settings-list">
+        <li className="settings-section">
+          <h2 className="settings-heading">Account Settings</h2>
+          <form className="settings-form" onSubmit={handleSubmit}>
+            <label className="settings-label">Username</label>
+            <input
+              className="settings-input"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+
+            <label className="settings-label">Email</label>
+            <input
+              className="settings-input"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <label className="settings-label">Password</label>
+            <input
+              className="settings-input"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <button type="submit" className="settings-submit-button">
+              Update Profile
+            </button>
+          </form>
+        </li>
+
+        <li className="settings-section">
+          <h3 className="section-title">Other Settings</h3>
+          <p className="section-description">
+            Additional settings or preferences can go here.
+          </p>
+        </li>
+      </ul>
     </div>
   );
 };
