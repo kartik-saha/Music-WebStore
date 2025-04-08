@@ -1,101 +1,91 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./Settings.css";
 
-const settingsData = [
-    { id: "language-preference", label: "Language", type: "select", options: ["English", "Spanish", "French"] },
-    { id: "change-email", label: "Change Email", type: "input-button" },
-    { id: "change-password", label: "New Password", type: "input-button" },
-    { id: "current-password", label: "Current Password", type: "input-button" },
-    { id: "enable-mfa", label: "Enable MFA", type: "button" },
-    { id: "delete-account", label: "Delete Account", type: "button" },
-    { id: "manage-subscription", label: "Manage Subscription", type: "button" },
-    { id: "playback-quality", label: "Playback Quality", type: "select", options: ["Low", "Medium", "High"], default: "Medium" },
-    { id: "inactivity-timer", label: "Inactivity Timer", type: "custom-slider" },
-    { id: "enable-artist-mode", label: "Enable Artist Mode", type: "custom-slider" },
-];
-
 const Settings = () => {
-    const [settings, setSettings] = useState({});
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const handleToggle = (id) => {
-        setSettings((prev) => ({ ...prev, [id]: !prev[id] }));
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const res = await axios.get("http://localhost:5000/api/users/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setUsername(res.data.username);
+        setEmail(res.data.email);
+      } catch (err) {
+        console.error("Error fetching user info:", err);
+      }
     };
 
-    const handleSelectChange = (id, value) => {
-        setSettings((prev) => ({ ...prev, [id]: value }));
-    };
+    fetchUserInfo();
+  }, []);
 
-    const handleInputChange = (id, value) => {
-        setSettings((prev) => ({ ...prev, [id]: value }));
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("accessToken");
 
-    return (
-        <div className="settings-container">
-            <div className="settings-box">
-                {settingsData.map((setting) => (
-                    <div key={setting.id} className="setting-item">
-                        <label className={setting.type === "select" ? "inline-label" : ""}>{setting.label}</label>
+      const updateData = {
+        username,
+        email,
+        password,
+      };
 
-                        {setting.type === "select" && (
-                            <select
-                                value={settings[setting.id] || setting.default || setting.options[0]}
-                                onChange={(e) => handleSelectChange(setting.id, e.target.value)}
-                                className="select-box"
-                            >
-                                {setting.options.map((option) => (
-                                    <option key={option} value={option}>
-                                        {option}
-                                    </option>
-                                ))}
-                            </select>
-                        )}
+      const res = await axios.patch("http://localhost:5000/api/users/update", updateData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-                        {setting.id === "inactivity-timer" && (
-                            <div className="number-input-group">
-                                <input
-                                    type="number"
-                                    placeholder="Enter time (mins)"
-                                    value={settings[setting.id] || ""}
-                                    onChange={(e) => handleInputChange(setting.id, e.target.value)}
-                                    className="number-input"
-                                    min="1"
-                                />
-                            </div>
-                        )}
+      alert("Profile updated successfully!");
 
-                        {setting.type === "custom-slider" && (
-                            <label className="custom-slider-label">
-                                <input
-                                    type="checkbox"
-                                    checked={settings[setting.id] || false}
-                                    onChange={() => handleToggle(setting.id)}
-                                    className="custom-slider"
-                                />
-                                <span className="custom-slider-track"></span>
-                            </label>
-                        )}
+      if (res.data.username) localStorage.setItem("username", res.data.username);
+      if (res.data.email) localStorage.setItem("email", res.data.email);
 
-                        {setting.type === "input-button" && (
-                            <div className="input-button-group">
-                                <input
-                                    type={setting.id === "change-email" ? "text" : "password"} 
-                                    placeholder={setting.label}
-                                    value={settings[setting.id] || ""}
-                                    onChange={(e) => handleInputChange(setting.id, e.target.value)}
-                                    className="small-input"
-                                />
-                                <button className="small-button">→</button>
-                            </div>
-                        )}
+    } catch (err) {
+      console.error("Error updating profile:", err.response || err);
+      alert("Failed to update profile.");
+    }
+  };
 
-                        {setting.type === "button" && (
-                            <button className="small-btn">{setting.label}</button>
-                        )}
-                    </div>
-                ))}
-            </div>
+  return (
+    <div className="settings-container">
+      <form className="settings-form" onSubmit={handleSubmit}>
+        <div className="settings-right">
+          <input
+            className="settings-input"
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            className="settings-input"
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            className="settings-input"
+            type="password"
+            placeholder="New Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button type="submit" className="settings-submit-button">
+            Update Profile
+          </button>
         </div>
-    );
+      </form>
+    </div>
+  );
 };
 
 export default Settings;
