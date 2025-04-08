@@ -1,25 +1,49 @@
 .search-page {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
-    font-family: sans-serif;
-}
-
-.search-input {
+    padding: 2rem;
+    color: var(--font-color);
+  }
+  
+  .song-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .song-card {
+    background: var(--secondary-bg);
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  
+  .song-card:hover {
+    transform: scale(1.03);
+  }
+  
+  .cover-image {
     width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.song-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-.song-item {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-}
+    height: 180px;
+    object-fit: cover;
+    border-radius: 0.75rem;
+  }
+  
+  .cover-placeholder {
+    height: 180px;
+    background: gray;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+  }
+  
+  .song-info h3 {
+    margin: 0.5rem 0 0.25rem;
+  }
+  
+  .song-info p {
+    font-size: 0.9rem;
+    color: var(--font-color-compliment);
+  }
+  

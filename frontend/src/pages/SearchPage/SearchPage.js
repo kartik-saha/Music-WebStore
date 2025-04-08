@@ -1,57 +1,60 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./SearchPage.css";
 
 const SearchPage = () => {
-    const [searchTerm, setSearchTerm] = useState("");
-    const [songs, setSongs] = useState([]);
-    const [filteredSongs, setFilteredSongs] = useState([]);
+  const [songs, setSongs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        // Fetch songs from the backend
-        const fetchSongs = async () => {
-            try {
-                const response = await fetch("http://localhost:5000/api/songs");
-                const data = await response.json();
-                setSongs(data);
-                setFilteredSongs(data);
-            } catch (err) {
-                console.error("Error fetching songs:", err);
-            }
-        };
-
-        fetchSongs();
-    }, []);
-
-    const handleSearch = (e) => {
-        const value = e.target.value;
-        setSearchTerm(value);
-
-        const filtered = songs.filter(song =>
-            song.title.toLowerCase().includes(value.toLowerCase()) ||
-            song.artist.toLowerCase().includes(value.toLowerCase())
-        );
-
-        setFilteredSongs(filtered);
+  useEffect(() => {
+    const fetchSongs = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/songs/songs");
+        const data = await response.json();
+        setSongs(data);
+      } catch (err) {
+        console.error("Failed to fetch songs:", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    return (
-        <div className="search-page">
-            <input
-                type="text"
-                className="search-input"
-                placeholder="Search songs..."
-                value={searchTerm}
-                onChange={handleSearch}
-            />
-            <ul className="song-list">
-                {filteredSongs.map((song) => (
-                    <li key={song._id} className="song-item">
-                        <strong>{song.title}</strong> by {song.artist}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+    fetchSongs();
+  }, []);
+
+  return (
+    <div className="search-page">
+      <h1>Search Results</h1>
+      {loading ? (
+        <p>Loading...</p>
+      ) : songs.length === 0 ? (
+        <p>No songs found.</p>
+      ) : (
+        <ul className="song-list">
+          {songs.map((song) => (
+            <li key={song._id} className="song-card">
+              <div className="cover">
+                {song.coverImage ? (
+                  <img
+                    src={`http://localhost:5000/api/upload/files/${song.coverImage}`}
+                    alt={song.songTitle}
+                  />
+                ) : (
+                  <div className="cover-placeholder">🎵</div>
+                )}
+              </div>
+              <div className="info">
+                <h3>{song.songTitle}</h3>
+                <p>Artist: {song.songArtist}</p>
+                <p>Album: {song.album}</p>
+                <p>Genre: {song.genre}</p>
+                <audio controls src={`http://localhost:5000/api/upload/files/${song.songFile}`} />
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 };
 
 export default SearchPage;
