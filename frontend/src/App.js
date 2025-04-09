@@ -1,19 +1,21 @@
+// src/App.js
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./pages/NavBar/NavBar";
 import Footer from "./pages/Footer/Footer";
 import ThemeSwitcher from "./pages/ThemeSwitcher/ThemeSwitcher";
 import MediaPlayerModal from "./pages/MediaPlayerModal/MediaPlayerModal";
-import { PROJECT_NAME } from "./config";
 import LoginModal from "./pages/LoginModal/LoginModal";
+import { PROJECT_NAME } from "./config";
 
-// Import pages
+// Pages
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Settings from "./pages/Settings/Settings";
 import UploadSong from "./pages/UploadSong/UploadSong";
 import Playlists from "./pages/Playlists/Playlists";
-import SearchPage from "./pages/SearchPage/SearchPage"; // ⬅️ Added
+import SearchPage from "./pages/SearchPage/SearchPage";
 
+// Helper for dynamic title updates
 const PageTitleUpdater = () => {
     const location = useLocation();
 
@@ -23,7 +25,7 @@ const PageTitleUpdater = () => {
             "/settings": `Settings | ${PROJECT_NAME}`,
             "/upload-song": `Upload Song | ${PROJECT_NAME}`,
             "/playlist": `Playlists | ${PROJECT_NAME}`,
-            "/search": `Search | ${PROJECT_NAME}`, // ⬅️ Added
+            "/search": `Search | ${PROJECT_NAME}`,
         };
 
         document.title = titles[location.pathname] || PROJECT_NAME;
@@ -36,6 +38,7 @@ function App() {
     const [user, setUser] = useState(null);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
 
+    // Check current user login state
     const checkLoginStatus = async () => {
         const token = localStorage.getItem("accessToken");
         if (!token) return;
@@ -63,6 +66,7 @@ function App() {
         }
     };
 
+    // Attempt to refresh tokens
     const tryRefreshToken = async () => {
         const refreshToken = localStorage.getItem("refreshToken");
         if (!refreshToken) {
@@ -83,7 +87,7 @@ function App() {
                 const data = await response.json();
                 localStorage.setItem("accessToken", data.accessToken);
                 localStorage.setItem("refreshToken", data.refreshToken);
-                await checkLoginStatus(); // Try again with new access token
+                await checkLoginStatus(); // Try again after refreshing
             } else {
                 console.error("Refresh token invalid or expired. Logging out.");
                 handleLogout();
@@ -94,10 +98,12 @@ function App() {
         }
     };
 
+    // Initial login check
     useEffect(() => {
         checkLoginStatus();
     }, []);
 
+    // Successful login handler
     const handleLoginSuccess = (userData) => {
         setUser(userData);
         setIsLoginOpen(false);
@@ -105,6 +111,7 @@ function App() {
         localStorage.setItem("refreshToken", userData.refreshToken);
     };
 
+    // Logout handler
     const handleLogout = async () => {
         const token = localStorage.getItem("accessToken");
 
@@ -130,7 +137,7 @@ function App() {
 
     return (
         <>
-            <ThemeSwitcher />
+            <ThemeSwitcher user={user} />
             <NavBar user={user} onLogout={handleLogout} />
 
             <Routes>
@@ -138,11 +145,12 @@ function App() {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/upload-song" element={<UploadSong />} />
                 <Route path="/playlist" element={<Playlists />} />
-                <Route path="/search" element={<SearchPage />} /> {/* ⬅️ Added */}
+                <Route path="/search" element={<SearchPage />} />
             </Routes>
 
             <Footer />
             <MediaPlayerModal />
+
             <LoginModal
                 isOpen={isLoginOpen}
                 onClose={() => setIsLoginOpen(false)}
@@ -152,6 +160,7 @@ function App() {
     );
 }
 
+// Wrap App with Router and Title Updater
 export default function AppWithRouter() {
     return (
         <Router>
